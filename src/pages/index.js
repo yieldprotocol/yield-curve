@@ -48,7 +48,7 @@ const IndexPage = (props) => {
     <Layout>
       <SEO title={siteTitle} description={siteDescription} keywords={siteKeywords} />
       <Container className="text-left md:text-center">
-        <div class="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
+        <div className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
           Hello Gatsby!
         </div>
       </Container>
