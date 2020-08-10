@@ -1,4 +1,7 @@
 import React from 'react'
+import { VictoryChart } from 'victory'
+import { VictoryLine, Curve } from 'victory'
+import { VictoryContainer, VictoryTheme, Point } from 'victory'
 
 // Component(s)
 import GraphQLErrorList from '../components/graphql-error-list'
@@ -21,7 +24,7 @@ export const query = graphql`
 `
 
 const ParagraphClass = 'text-sm lg:text-baseline text-gray-600 mb-8'
-const HeadingClass = 'text-xl lg:text-3xl font-semibold mb-6'
+const HeadingClass = 'text-xl lg:text-3xl font-bold mb-6'
 
 const IndexPage = (props) => {
   const { data, errors } = props
@@ -44,12 +47,31 @@ const IndexPage = (props) => {
   const siteDescription = site.siteMetadata.description
   const siteKeywords = site.siteMetadata.keywords
 
+  const sampleData = [
+    { x: 1, y: 2 },
+    { x: 2, y: 3 },
+    { x: 3, y: 5 },
+    { x: 4, y: 4 },
+    { x: 5, y: 7 },
+  ]
+
   return (
     <Layout>
       <SEO title={siteTitle} description={siteDescription} keywords={siteKeywords} />
       <Container className="text-left md:text-center">
-        <div className="bg-blue-500 hover:bg-blue-400 text-white font-bold py-2 px-4 border-b-4 border-blue-700 hover:border-blue-500 rounded">
-          Hello Gatsby!
+        <div className="inline-block w-full py-24 md:py-48">
+          <div className="inline-block w-full max-w-3xl">
+            <h1 className={HeadingClass}>The Yield Curve</h1>
+            <p className={ParagraphClass}>Uhhh.... the curves yield, yo!</p>
+            <VictoryLine
+              interpolation="natural"
+              animate={{
+                duration: 2000,
+                onLoad: { duration: 1000 },
+              }}
+              data={sampleData}
+            />
+          </div>
         </div>
       </Container>
     </Layout>
