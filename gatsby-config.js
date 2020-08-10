@@ -6,5 +6,19 @@
 
 module.exports = {
   /* Your site config here */
-  plugins: [`gatsby-plugin-sass`, `gatsby-plugin-postcss`],
+  plugins: [
+    {
+      resolve: `gatsby-plugin-sass`,
+      options: {
+        // Configure SASS to process Tailwind
+        postCssPlugins: [require('tailwindcss')],
+      },
+    },
+  ],
+  siteMetadata: {
+    title: `Yield Curve`,
+    siteUrl: `https://curve.yield.is/`,
+    description: `Some description can go here...`,
+    author: `yield`
+  },
 }
