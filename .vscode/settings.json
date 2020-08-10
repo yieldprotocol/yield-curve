@@ -1,0 +1,9 @@
+{
+  "files.associations": {
+    "*.js": "javascriptreact"
+  },
+  "javascript.format.insertSpaceBeforeFunctionParenthesis": true,
+  "prettier.semi": false,
+  "editor.tabSize": 2,
+  "prettier.singleQuote": true
+}
