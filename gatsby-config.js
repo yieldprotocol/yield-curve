@@ -5,8 +5,8 @@
  */
 
 module.exports = {
-  /* Your site config here */
   plugins: [
+    'gatsby-plugin-react-helmet-async',
     {
       resolve: `gatsby-plugin-sass`,
       options: {

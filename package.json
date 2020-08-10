@@ -16,6 +16,7 @@
   "dependencies": {
     "gatsby": "^2.24.26",
     "gatsby-cli": "^2.12.81",
+    "gatsby-plugin-react-helmet-async": "^1.0.17-0",
     "gatsby-plugin-sass": "^2.3.12",
     "node-sass": "^4.14.1",
     "react": "^16.12.0",

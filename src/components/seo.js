@@ -151,4 +151,14 @@ function SEO({ description, keywords, title, image, lang, meta, url }) {
   )
 }
 
+SEO.defaultProps = {
+  keywords: [],
+  description: 'Yield Curve Graph',
+  title: 'Yield Curve',
+  image: 'https://curve.yield.is/img/social.png',
+  lang: 'en',
+  meta: [],
+  url: 'https://curve.yield.is/',
+}
+
 export default SEO
