@@ -16,7 +16,7 @@ const query = graphql`
   }
 `
 
-function LayoutContainer() {
+function LayoutContainer(props) {
   return (
     <StaticQuery
       query={query}

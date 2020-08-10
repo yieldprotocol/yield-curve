@@ -6,7 +6,7 @@ import SEO from './seo'
 
 import '../styles/main.scss'
 
-const Layout = () => {
+const Layout = (props) => {
   const { siteTitle, download, email } = props
   return (
     <>

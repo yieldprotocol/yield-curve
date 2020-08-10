@@ -19,6 +19,7 @@ module.exports = {
     title: `Yield Curve`,
     siteUrl: `https://curve.yield.is/`,
     description: `Some description can go here...`,
-    author: `yield`
+    author: `yield`,
+    email: `hi@yield.is`,
   },
 }
