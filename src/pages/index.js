@@ -47,12 +47,20 @@ const IndexPage = (props) => {
   const siteDescription = site.siteMetadata.description
   const siteKeywords = site.siteMetadata.keywords
 
-  const sampleData = [
+  const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+
+  let sampleData = [
     { x: 1, y: 2 },
     { x: 2, y: 3 },
-    { x: 3, y: 5 },
+    {
+      x: 3,
+      y: getRandomInt(1, 8),
+    },
     { x: 4, y: 4 },
-    { x: 5, y: 7 },
+    {
+      x: 5,
+      y: getRandomInt(1, 8),
+    },
   ]
 
   return (
