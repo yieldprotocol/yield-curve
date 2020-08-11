@@ -56,7 +56,7 @@ function SEO({ description, keywords, title, image, lang, meta, url }) {
               },
               {
                 href: 'https://curve.yield.is/favicons/safari-pinned-tab.svg',
-                color: '#00bfaf',
+                color: '#5f47dc',
                 rel: 'mask-icon',
               },
               {
@@ -123,7 +123,7 @@ function SEO({ description, keywords, title, image, lang, meta, url }) {
                 content: metaDescription,
               },
               {
-                content: '#033FFF',
+                content: '#603cba',
                 name: 'msapplication-TileColor',
               },
               {
@@ -131,7 +131,7 @@ function SEO({ description, keywords, title, image, lang, meta, url }) {
                 name: 'msapplication-config',
               },
               {
-                content: '#000000',
+                content: '#5f47dc',
                 name: 'theme-color',
               },
             ]
