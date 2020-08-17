@@ -1,0 +1,62 @@
+.navbar
+  transition: all 0.25s ease-in-out
+  background: white
+
+  .mobile
+    transition: all 0.15s cubic-bezier(0.075, 0.82, 0.165, 1)
+    transform: translate3d(0, -110%, 0)
+    overflow-x: hidden
+    overflow-y: auto
+
+    &.open
+      transform: translate3d(0, 0, 0)
+
+  .middle
+    @media screen and (min-width: 1024px)
+      position: absolute
+      right: 0
+      left: 0
+
+  .dropdown-list
+    transition: all 0.15s ease-in-out
+    box-shadow: none
+    width: 100%
+
+    @media screen and (min-width: 1024px)
+      box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1)
+      overflow-x: hidden
+      overflow-y: auto
+      max-height: 38rem
+      left: -2rem
+      width: 10rem
+      top: 2rem
+
+  .dropdown-icon
+    transition: transform 0.15s ease-in-out
+    transform: rotate(0deg)
+    width: 1rem
+
+    &.invert
+      transform: rotate(-180deg)
+
+  .dropdown-container
+    &.open
+      .dropdown-list
+        display: inline-block
+        opacity: 1
+
+    &.closed
+      .dropdown-list
+        display: none
+        opacity: 0
+
+  .list-icon
+    padding: 0
+    height: 1.25rem
+    width: 1.25rem
+
+    @media screen and (min-width: 60em)
+      background: #333
+      padding: 0.25rem
+      height: 2rem
+      width: 2rem
