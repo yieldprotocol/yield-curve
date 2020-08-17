@@ -94,7 +94,7 @@ const Footer = class extends React.Component {
             {/* Logo */}
             <div className={classColumns}>
               <img
-                className="inline-block align-middle mr-2 w-12 md:w-14"
+                className="inline-block align-middle mr-2 w-8"
                 src="/logo.svg"
                 alt={siteTitle}
               />

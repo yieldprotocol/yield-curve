@@ -74,7 +74,7 @@ const Header = class extends React.Component {
     const Logo = () => (
       <Link className="inline-block text-black font-semibold link" title={siteTitle} to="/">
         <img
-          className="inline-block align-middle mr-4 w-6 lg:w-8"
+          className="inline-block align-middle mr-2 w-8 lg:w-8"
           alt={siteTitle}
           src="/logo.svg"
         />
