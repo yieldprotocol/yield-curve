@@ -4,17 +4,12 @@ import { Link } from 'gatsby'
 import Container from './container'
 
 const classColumns = 'w-full md:w-4/12 mb-6'
-const classStrong = 'inline-block w-full font-bold text-md mb-4'
+const classStrong = 'inline-block w-full font-bold text-md mb-4 text-black'
 const classLinks =
-  'inline-block w-full md:w-auto font-normal text-gray-600 text-sm mb-2 md:mb-0 mr-0 md:mr-8 link py-1'
+  'inline-block w-full md:w-auto font-normal text-gray-200 text-sm mb-2 md:mb-0 mr-0 md:mr-8 link py-1'
 const year = new Date().getFullYear()
 
 const Footer = class extends React.Component {
-  constructor(props) {
-    super(props)
-    this.getTime = this.getTime.bind(this)
-  }
-
   render() {
     const { siteTitle, email } = this.props
 
@@ -87,17 +82,13 @@ const Footer = class extends React.Component {
     )
 
     return (
-      <footer className="inline-block w-full py-6">
-        <Container>
+      <footer className="inline-block w-full">
+        <Container className="border-t-2 border-solid border-offwhite">
           {/* Top line */}
-          <div className="inline-block md:flex items-start justify-between w-full">
+          <div className="inline-block md:flex items-start justify-between w-full py-6">
             {/* Logo */}
             <div className={classColumns}>
-              <img
-                className="inline-block align-middle mr-2 w-8"
-                src="/logo.svg"
-                alt={siteTitle}
-              />
+              <img className="inline-block align-middle mr-2 w-8" src="/logo.svg" alt={siteTitle} />
             </div>
             {/* Links */}
             {footerLinks.map((object, index) => (
@@ -113,7 +104,7 @@ const Footer = class extends React.Component {
             </div>
             <div className="inline-block w-full md:3/12">
               <a
-                className="text-xs text-gray-900 underline link"
+                className="text-xs text-gray-800 underline link"
                 target="_blank"
                 href="https://yield.is"
                 rel="noopener noreferrer"

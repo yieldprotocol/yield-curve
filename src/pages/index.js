@@ -1,7 +1,5 @@
 import React from 'react'
-import { VictoryChart } from 'victory'
-import { VictoryLine, Curve } from 'victory'
-import { VictoryContainer, VictoryTheme, Point } from 'victory'
+import { VictoryChart, VictoryLabel, VictoryLine } from 'victory'
 
 // Component(s)
 import GraphQLErrorList from '../components/graphql-error-list'
@@ -10,6 +8,7 @@ import SEO from '../components/seo'
 
 // Container(s)
 import Layout from '../containers/layout'
+import { theme } from '../../tailwind.config'
 
 export const query = graphql`
   query IndexPageQuery {
@@ -23,8 +22,8 @@ export const query = graphql`
   }
 `
 
-const ParagraphClass = 'text-sm lg:text-baseline text-gray-600 mb-8'
-const HeadingClass = 'text-xl lg:text-3xl font-bold mb-6'
+const ParagraphClass = 'text-sm lg:text-baseline text-gray-200 mb-8'
+const HeadingClass = 'text-2xl lg:text-4xl font-bold mb-6'
 
 const IndexPage = (props) => {
   const { data, errors } = props
@@ -68,17 +67,23 @@ const IndexPage = (props) => {
       <SEO title={siteTitle} description={siteDescription} keywords={siteKeywords} />
       <Container className="text-left md:text-center">
         <div className="inline-block w-full py-24 md:py-48">
-          <div className="inline-block w-full max-w-3xl">
+          <div className="inline-block w-full">
             <h1 className={HeadingClass}>The Yield Curve</h1>
             <p className={ParagraphClass}>Uhhh.... the curves yield, yo!</p>
-            <VictoryLine
-              interpolation="natural"
-              animate={{
-                duration: 2000,
-                onLoad: { duration: 1000 },
+            <VictoryChart
+              style={{
+                labels: { fontSize: 8 },
               }}
-              data={sampleData}
-            />
+            >
+              <VictoryLine
+                interpolation="natural"
+                animate={{
+                  duration: 2000,
+                  onLoad: { duration: 1000 },
+                }}
+                data={sampleData}
+              />
+            </VictoryChart>
           </div>
         </div>
       </Container>

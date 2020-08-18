@@ -1,8 +1,6 @@
 import React from 'react'
 import { Link } from 'gatsby'
 
-import Button from './button'
-
 const classMenuButton =
   'inline-block md:hidden bg-transparent border-none relative w-auto text-sm font-medium'
 const classLinks =
@@ -14,27 +12,9 @@ const Header = class extends React.Component {
 
     this.state = {
       menuOpen: false,
-      isTop: true,
     }
-
-    this.isTopChecker = this.isTopChecker.bind(this)
     this.toggleMenu = this.toggleMenu.bind(this)
     this.closeMenu = this.closeMenu.bind(this)
-  }
-
-  isTopChecker() {
-    const isTop = window.scrollY < 50
-    if (isTop !== this.state.isTop) {
-      this.setState({ isTop })
-    }
-  }
-
-  componentDidMount() {
-    window.addEventListener('scroll', this.isTopChecker)
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('scroll', this.isTopChecker)
   }
 
   toggleMenu() {
@@ -72,7 +52,7 @@ const Header = class extends React.Component {
     ]
 
     const Logo = () => (
-      <Link className="inline-block text-black font-semibold link" title={siteTitle} to="/">
+      <Link className="inline-block text-black font-semibold link mr-4" title={siteTitle} to="/">
         <img
           className="inline-block align-middle mr-2 w-8 lg:w-8"
           alt={siteTitle}
@@ -99,8 +79,10 @@ const Header = class extends React.Component {
     )
 
     const RightNav = () => (
-      <div className="relative w-auto tl tr-l">
-        <Button text="Talk to us" to="/contact" outlined />
+      <div className="relative w-auto text-center md:text-right">
+        <a className="font-bold" href="https://twitter.com/yield">
+          Get in touch
+        </a>
       </div>
     )
 
@@ -119,19 +101,17 @@ const Header = class extends React.Component {
     return (
       <nav
         aria-label="main-navigation"
-        className={`navbar inline-block fixed w-full left-0 top-0 z-20 border-none ${
-          this.state.isTop ? `py-8` : `py-4`
-        }`}
+        className="navbar inline-block fixed w-full left-0 top-0 z-20 border-none py-2 bg-offwhite"
         role="navigation"
       >
         {/* Mobile nav */}
         <div
-          className={`mobile inline-block fixed overflow-y-auto overflow-x-hidden bg-black text-center left-0 top-0 w-full h-screen px-5 z-30
-          ${this.state.menuOpen ? `open` : ''} ${this.state.isTop ? `py-8` : `py-4`}`}
+          className={`mobile inline-block fixed overflow-y-auto overflow-x-hidden bg-offwhite text-center left-0 top-0 w-full h-screen px-5 py-2 z-30
+          ${this.state.menuOpen ? `open` : ''}`}
         >
           <div className="flex w-100 justify-between items-center">
             <Logo />
-            <div className="inline-block md:hidden relative tr">
+            <div className="inline-block md:hidden relative text-right">
               <CloseButton />
             </div>
           </div>
@@ -143,18 +123,19 @@ const Header = class extends React.Component {
         {/* Non-Mobile nav */}
         <div className={`container mx-auto px-5`}>
           <div className="flex w-full justify-between items-center">
-            {/* Left */}
-            <Logo />
-            {/* Middle */}
-            <div className="hidden md:inline-block w-7/12 relative tc">
-              <MiddleNav />
+            {/* Left & middle */}
+            <div className="inline-block realtive text-left w-8/12">
+              <Logo />
+              <div className="hidden md:inline-block">
+                <MiddleNav />
+              </div>
             </div>
             {/* Right */}
-            <div className="hidden md:inline-block relative tr">
+            <div className="hidden md:inline-block relative text-right">
               <RightNav />
             </div>
             {/* Menu */}
-            <div className="inline-block md:hidden relative tr">
+            <div className="inline-block md:hidden relative text-right">
               <MenuButton />
             </div>
           </div>

@@ -1,18 +1,33 @@
 module.exports = {
   theme: {
     fontFamily: {
-      display: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
-      body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
+      // serif: ['Gupter', 'Georgia', 'Cambira', 'sans-serif'],
+      sans: [
+        'Inter',
+        'system-ui',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        '"Noto Sans"',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+        '"Noto Color Emoji"',
+      ],
     },
     extend: {
       colors: {
-        primary: '#5f47dc',
+        primary: '#9191DD',
         secondary: '#009E83',
         offwhite: '#F7F7FA',
-        yellow: '#F49322'
-      }
-    }
+        yellow: '#F49322',
+      },
+    },
   },
   variants: {},
-  plugins: []
+  plugins: [],
 }
