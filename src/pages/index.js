@@ -10,6 +10,9 @@ import SEO from '../components/seo'
 // Container(s)
 import Layout from '../containers/layout'
 
+// Pool
+import Pool from '../contracts/pool'
+
 export const query = graphql`
   query IndexPageQuery {
     site {
@@ -71,18 +74,13 @@ const IndexPage = (props) => {
 
       const provider = ethers.getDefaultProvider('rinkeby')
 
-      const yDaiAbi = [
-        // Some simple details about the token
-        'function name() view returns (string)',
-        'function symbol() view returns (string)',
-
-        // Get the sekkDaiPreviwe for 1 Dai
-        'function sellDaiPreview(1) view returns (uint128)',
-      ]
-
-      const contract = new ethers.Contract(rinkebyAddrs['yDai-2020-08-21-Pool'], yDaiAbi, provider)
-      const contactAwait = await contract.sellDaiPreview(BigNumber.from(1))
-      setContract(contactAwait)
+      const contract = new ethers.Contract(
+        '0x756C2165e9401E02E455786d50baAe0Bd937c0bf',
+        Pool.abi,
+        provider
+      )
+      const contractAwait = await contract.sellDaiPreview(BigNumber.from(42))
+      setContract(contractAwait)
     }
     getContract()
   }, [])
