@@ -75,7 +75,7 @@ const IndexPage = (props) => {
       const provider = ethers.getDefaultProvider('rinkeby')
 
       const contract = new ethers.Contract(
-        '0x756C2165e9401E02E455786d50baAe0Bd937c0bf',
+        '0x624449B4227510010576079588242a273458e4e8',
         Pool.abi,
         provider
       )
