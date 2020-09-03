@@ -43,43 +43,35 @@ const IndexPage = (props) => {
 
       // Hardcoded addresses (for now)
       const rinkebyAddrs = {
-        Weth: '0x92265df39A1aE9f8aBf0e6E2d8613189948F81b1',
-        Treasury: '0xCE3beF0f43AFF13FD0392Da164e815A4fDc1C385',
-        Migrations: '0x6b86cb60E2e10b773e9Bb1F9621458607453dE97',
-        'yDai-2020-08-21-Pool': {
-          addr: '0x624449B4227510010576079588242a273458e4e8',
-          abi: '000000000000000000000000624449b4227510010576079588242a273458e4e8',
-        },
-        End: '0xbc073be9EBeC52702AeC0b2C0Ec9134948bA137d',
-        'yDai-2020-08-20-Pool': '0x6e6961455dd14F4011166bC85e8B37AE4eCBE5E1',
-        Dai: '0xBb4a5c61F98932921374FFD0D7AbB597a224D972',
-        'yDai-2020-08-23-Pool': '0x49da1634612BF9f0158Cac809004c2294338f2b7',
-        Vat: '0x56C4555a512Af3747F2cA15a5E1238de1982806F',
-        Multicall: '0x42B24E6D5F733e63949bCe7BFF782177726444F7',
-        Controller: '0x31cc3CF1d7Aa628F82D7904a72D7cE6ECD35e0b7',
-        WethJoin: '0x477638CBAb060fE352ED2eA45B8802EAa1c6d662',
-        yDai0: '0x8833Ba46e4d5598b587cae9033EDA844dCc72b52',
-        yDai1: '0xc749b1fb8790C186C8717755927349737ca59b1b',
-        'yDai-2020-08-22-Pool': '0x1a16df5eB12E41F3b9AD4B2B584107D0A709B984',
-        Pot: '0x69567757a8a82C5BC8648c92d0FEC15ebD93D768',
-        Chai: '0xa2B81205422fB38825a722d3C6b2FCa516835F5D',
-        yDai2: '0xa78Ff886199c2881ECd1bC7C8B998A2Fe991574E',
-        DaiJoin: '0x9cDEf2a7839557A21A0618E925009072Ef530DBB',
-        Uniswap: '0x6d1759237cAFa696A0A81e5195B6dFB815f19230',
-        Flash: '0xd31c8A5d632c9e73986Da870cAbF419d0Acf8903',
-        Liquidations: '0x02A22f488c4A01B75815A743c83d337E6023A784',
-        yDai3: '0xA230C2F8Dc7c212C76E1c63C0E6d38c339F3D730',
-        Unwind: '0xAb402B9b1721C4e3fCCc56d7F63094A102ca4739',
+        Unwind: '0x130dB1eA1F1cf076D0cd1e67B3b6d7fc521897bf',
+        'yDai-t1-Pool': '0x72e673b9C3C176857F67e3e2C19b18F51A3D9157',
+        'yDai-t0-Pool': '0x7C54591B7FEA8331154Ef3c3Ed01fdCC355ED2fb',
+        'yDai-t2-Pool': '0x8CF19fF4f66113aC78C49e5FFC3aad87Be677344',
+        'yDai-t3-Pool': '0xa160AC2C5f7a429865aD7586fb71d804A24D1a54',
+        yDai2: '0xcc4829bd239128fDEE4544AF8CEa3c16E4d3C3aB',
+        yDai1: '0x935ed1c9f3263DE8a36808129Ba4b89DEb1FDD41',
+        yDai3: '0xc64020cc89DbC7ec6b21B70ecB9698C2a34Ed23D',
+        yDai0: '0x014b973A92ec05AE39FB042B8a6BD4e87971402c',
+        Treasury: '0x428fF97383d63199991627f79913Aded8fdBFeeF',
+        Liquidations: '0x58Db1B1E69F9c8488Fe306A928020DAE6D5540D8',
+        Controller: '0x733333293720BaaA5F4087385a677DE44A661a89',
+        YieldProxy: '0x6fDB5C88ccfD3c6719bDA752C07b4E3F2382843F',
+        Migrations: '0x884598BE33888f2eF19569054C69D178FbfA6A0c',
+        Chai: '0x458231bBDE7f1d10Fe25E259252bA575cEc8760D',
+        End: '0x72f0b20cC2d1E8BB4b3c4Aac2D08629B327066a5',
+        Dai: '0x6A9865aDE2B6207dAAC49f8bCba9705dEB0B0e6D',
+        WethJoin: '0xA6268caddf03356aF17C7259E10d865C9DF48863',
+        Pot: '0x867E3054af4d30fCCF0fCf3B6e855B49EF7e02Ed',
+        Vat: '0x6E631D87bF9456495dDC9bDa576534592f486964',
+        Weth: '0xc421f99D871aC5793985fd86d8659B7bDACFc9AC',
+        DaiJoin: '0xa956A2a53C3F8F3Dc02793F7b13e8121aD114c54',
       }
 
       const provider = ethers.getDefaultProvider('rinkeby')
 
-      const contract = new ethers.Contract(
-        '0x624449B4227510010576079588242a273458e4e8',
-        Pool.abi,
-        provider
-      )
-      const contractAwait = await contract.sellDaiPreview(BigNumber.from(42))
+      const contract = new ethers.Contract(rinkebyAddrs['yDai-t3-Pool'], Pool.abi, provider)
+      const contractAwait = await contract.getDaiReserves()
+      console.log(contractAwait) // temporarily logging
       setContract(contractAwait)
     }
     getContract()
