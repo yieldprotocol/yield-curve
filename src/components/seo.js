@@ -23,6 +23,7 @@ function SEO({ description, keywords, title, image, lang, meta, url }) {
           return
         }
         const metaDescription = description || data.site.siteMetadata.description
+        const socialImage = image || 'https://yield-web.netlify.app/img/social.png'
         return (
           <Helmet
             htmlAttributes={{
@@ -34,38 +35,38 @@ function SEO({ description, keywords, title, image, lang, meta, url }) {
             }
             link={[
               {
-                href: 'https://curve.yield.is/favicons/apple-touch-icon.png',
+                href: 'https://yield-web.netlify.app/favicons/apple-touch-icon.png',
                 sizes: '180x180',
                 rel: 'apple-touch-icon',
               },
               {
-                href: 'https://curve.yield.is/favicons/favicon-32x32.png',
+                href: 'https://yield-web.netlify.app/favicons/favicon-32x32.png',
                 sizes: '32x32',
                 type: 'image/png',
                 rel: 'icon',
               },
               {
-                href: 'https://curve.yield.is/favicons/favicon-16x16.png',
+                href: 'https://yield-web.netlify.app/favicons/favicon-16x16.png',
                 sizes: '16x16',
                 type: 'image/png',
                 rel: 'icon',
               },
               {
-                href: 'https://curve.yield.is/favicons/site.webmanifest',
+                href: 'https://yield-web.netlify.app/favicons/site.webmanifest',
                 rel: 'manifest',
               },
               {
-                href: 'https://curve.yield.is/favicons/safari-pinned-tab.svg',
-                color: '#5f47dc',
+                href: 'https://yield-web.netlify.app/favicons/safari-pinned-tab.svg',
+                color: '#5641ff',
                 rel: 'mask-icon',
               },
               {
-                href: 'https://curve.yield.is/favicons/favicon.ico',
+                href: 'https://yield-web.netlify.app/favicons/favicon.ico',
                 rel: 'shortcut icon',
               },
               {
                 href:
-                  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap',
+                  'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Syne:wght@600&display=swap',
                 rel: 'stylesheet',
               },
             ]}
@@ -80,7 +81,7 @@ function SEO({ description, keywords, title, image, lang, meta, url }) {
               },
               {
                 property: 'og:image',
-                content: image,
+                content: socialImage,
               },
               {
                 property: 'og:image:width',
@@ -127,11 +128,11 @@ function SEO({ description, keywords, title, image, lang, meta, url }) {
                 name: 'msapplication-TileColor',
               },
               {
-                content: 'https://curve.yield.is/favicons/browserconfig.xml',
+                content: 'https://yield-web.netlify.app/favicons/browserconfig.xml',
                 name: 'msapplication-config',
               },
               {
-                content: '#5f47dc',
+                content: '#241e53',
                 name: 'theme-color',
               },
             ]

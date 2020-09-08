@@ -1,33 +1,21 @@
 module.exports = {
   theme: {
+    minHeight: {
+      display: '50rem'
+    },
     fontFamily: {
-      // serif: ['Gupter', 'Georgia', 'Cambira', 'sans-serif'],
-      sans: [
-        'Inter',
-        'system-ui',
-        '-apple-system',
-        'BlinkMacSystemFont',
-        '"Segoe UI"',
-        'Roboto',
-        '"Helvetica Neue"',
-        'Arial',
-        '"Noto Sans"',
-        'sans-serif',
-        '"Apple Color Emoji"',
-        '"Segoe UI Emoji"',
-        '"Segoe UI Symbol"',
-        '"Noto Color Emoji"',
-      ],
+      display: ['Syne', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+      body: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
     },
     extend: {
       colors: {
-        primary: '#9191DD',
-        secondary: '#009E83',
+        primary: '#FFD5A3',
+        secondary: '#A3FFE3',
         offwhite: '#F7F7FA',
-        yellow: '#F49322',
-      },
-    },
+        yellow: 'F7D958'
+      }
+    }
   },
   variants: {},
-  plugins: [],
+  plugins: []
 }

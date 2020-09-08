@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useReducer } from 'react'
 import { ethers, BigNumber } from 'ethers'
-import { VictoryChart, VictoryLabel, VictoryLine } from 'victory'
+import { Chart } from 'react-charts'
 
 // Component(s)
 import GraphQLErrorList from '../components/graphql-error-list'
-import Container from '../components/container'
+import ContainerFull from '../components/container-full'
 import SEO from '../components/seo'
 
 // Container(s)
@@ -25,57 +25,97 @@ export const query = graphql`
   }
 `
 
-const ParagraphClass = 'text-sm lg:text-baseline text-gray-200 mb-8'
-const HeadingClass = 'text-2xl lg:text-4xl font-bold mb-6'
+const ParagraphClass = 'text-sm lg:text-baseline text-gray-500 mb-8'
+const HeadingClass = 'text-2xl lg:text-4xl font-bold font-display mb-6'
 
 const IndexPage = (props) => {
   const { data, errors } = props
 
-  // Maturity, not sure if needed tbh
-  const maturity = [12, 24, 48, 72]
+  // Set state for yields
+  const [haveReserves, setHaveReserves] = React.useState(false)
+  const [reserves, setReserves] = React.useState([])
 
-  // Handle ethers
-  const [contract, setContract] = useState(null)
-  useEffect(() => {
-    async function getContract() {
-      // const provider = new ethers.providers.Web3Provider(window.ethereum)
-      // console.log(provider)
+  // State for addresses
+  const [addresses] = useState([
+    {
+      address: '0x34F9dB53Ec17b03Eb173B6487DFb4CA6703F6af9',
+      date: new Date('2021-12-31'),
+    },
+    {
+      address: '0xa160AC2C5f7a429865aD7586fb71d804A24D1a54', // this should be 0x4f5AF74C1cd306B03144e9F94fE9317FADEE88e5 but testing the 0 case scenario first
+      date: new Date('2021-01-01'),
+    },
+    {
+      address: '0x8f29250B6510433C4ddCaf747621e00Ea0279654',
+      date: new Date('2020-09-06'),
+    },
+    {
+      address: '0xcdAd94bAd9AF4c9a4E1b6Bf33545F68191f8060E',
+      date: new Date('2021-10-01'),
+    },
+  ])
 
-      // Hardcoded addresses (for now)
-      const rinkebyAddrs = {
-        Unwind: '0x130dB1eA1F1cf076D0cd1e67B3b6d7fc521897bf',
-        'yDai-t1-Pool': '0x72e673b9C3C176857F67e3e2C19b18F51A3D9157',
-        'yDai-t0-Pool': '0x7C54591B7FEA8331154Ef3c3Ed01fdCC355ED2fb',
-        'yDai-t2-Pool': '0x8CF19fF4f66113aC78C49e5FFC3aad87Be677344',
-        'yDai-t3-Pool': '0xa160AC2C5f7a429865aD7586fb71d804A24D1a54',
-        yDai2: '0xcc4829bd239128fDEE4544AF8CEa3c16E4d3C3aB',
-        yDai1: '0x935ed1c9f3263DE8a36808129Ba4b89DEb1FDD41',
-        yDai3: '0xc64020cc89DbC7ec6b21B70ecB9698C2a34Ed23D',
-        yDai0: '0x014b973A92ec05AE39FB042B8a6BD4e87971402c',
-        Treasury: '0x428fF97383d63199991627f79913Aded8fdBFeeF',
-        Liquidations: '0x58Db1B1E69F9c8488Fe306A928020DAE6D5540D8',
-        Controller: '0x733333293720BaaA5F4087385a677DE44A661a89',
-        YieldProxy: '0x6fDB5C88ccfD3c6719bDA752C07b4E3F2382843F',
-        Migrations: '0x884598BE33888f2eF19569054C69D178FbfA6A0c',
-        Chai: '0x458231bBDE7f1d10Fe25E259252bA575cEc8760D',
-        End: '0x72f0b20cC2d1E8BB4b3c4Aac2D08629B327066a5',
-        Dai: '0x6A9865aDE2B6207dAAC49f8bCba9705dEB0B0e6D',
-        WethJoin: '0xA6268caddf03356aF17C7259E10d865C9DF48863',
-        Pot: '0x867E3054af4d30fCCF0fCf3B6e855B49EF7e02Ed',
-        Vat: '0x6E631D87bF9456495dDC9bDa576534592f486964',
-        Weth: '0xc421f99D871aC5793985fd86d8659B7bDACFc9AC',
-        DaiJoin: '0xa956A2a53C3F8F3Dc02793F7b13e8121aD114c54',
-      }
-
+  // Set as a const to prevent infinite loop due to useEffect hook
+  const fetchReserves = async () => {
+    try {
       const provider = ethers.getDefaultProvider('rinkeby')
 
-      const contract = new ethers.Contract(rinkebyAddrs['yDai-t3-Pool'], Pool.abi, provider)
-      const contractAwait = await contract.getDaiReserves()
-      console.log(contractAwait) // temporarily logging
-      setContract(contractAwait)
+      const results = []
+
+      await Promise.all(
+        addresses.map(async (obj) => {
+          const contract = new ethers.Contract(obj.address, Pool.abi, provider)
+          const getYDaiReserves = await contract.getYDaiReserves()
+          const reservesEth = ethers.utils.formatEther(getYDaiReserves) / 100000
+          // console.log(reservesEth)
+          results.push({
+            // x: `${obj.date.getUTCMonth() + 1}/${obj.date.getUTCFullYear()}`,
+            x: obj.date.getUTCMonth() + 1,
+            y: reservesEth,
+          })
+        })
+      )
+      const sortedResults = results.sort((a, b) => b.x - a.x)
+      const filteredResults = sortedResults.filter((i) => i.y > 0)
+      setHaveReserves(true)
+      setReserves(filteredResults)
+    } catch (error) {
+      console.log(error)
+      setHaveReserves(false)
     }
-    getContract()
-  }, [])
+  }
+
+  // Only run this once per render
+  useEffect(() => {
+    fetchReserves()
+  }, [haveReserves])
+
+  console.log(reserves)
+
+  const chartData = React.useMemo(
+    () => [
+      {
+        // label: 'Series 1',
+        // data: [
+        //   [0, 1],
+        //   [1, 2],
+        //   [2, 4],
+        //   [3, 2],
+        //   [4, 7],
+        // ],
+        data: [...reserves],
+      },
+    ],
+    [reserves]
+  )
+
+  const axes = React.useMemo(
+    () => [
+      { primary: true, type: 'linear', position: 'bottom' },
+      { type: 'linear', position: 'left' },
+    ],
+    []
+  )
 
   if (errors) {
     return (
@@ -95,47 +135,25 @@ const IndexPage = (props) => {
   const siteDescription = site.siteMetadata.description
   const siteKeywords = site.siteMetadata.keywords
 
-  const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-
-  let sampleData = [
-    { x: 1, y: 2 },
-    { x: 2, y: 3 },
-    {
-      x: 3,
-      y: getRandomInt(1, 8),
-    },
-    { x: 4, y: 4 },
-    {
-      x: 5,
-      y: getRandomInt(1, 8),
-    },
-  ]
-
   return (
     <Layout>
       <SEO title={siteTitle} description={siteDescription} keywords={siteKeywords} />
-      <Container className="text-left md:text-center">
-        <div className="inline-block w-full py-24 md:py-48">
+      <ContainerFull>
+        <div className="inline-block relative w-full h-screen text-center overflow-hidden">
           <div className="inline-block w-full">
             <h1 className={HeadingClass}>The Yield Curve</h1>
             <p className={ParagraphClass}>Uhhh.... the curves yield, yo!</p>
-            <VictoryChart
-              style={{
-                labels: { fontSize: 8 },
-              }}
-            >
-              <VictoryLine
-                interpolation="natural"
-                animate={{
-                  duration: 2000,
-                  onLoad: { duration: 1000 },
-                }}
-                data={sampleData}
-              />
-            </VictoryChart>
+          </div>
+          <div
+            className="inline-block relative w-full"
+            style={{
+              height: '50vh',
+            }}
+          >
+            <Chart data={chartData} axes={axes} dark />
           </div>
         </div>
-      </Container>
+      </ContainerFull>
     </Layout>
   )
 }

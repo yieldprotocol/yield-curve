@@ -21,10 +21,11 @@
     "gatsby-plugin-sass": "^2.3.12",
     "node-sass": "^4.14.1",
     "react": "^16.12.0",
+    "react-charts": "^2.0.0-beta.7",
     "react-dom": "^16.12.0",
+    "react-ga": "^3.1.2",
     "react-helmet-async": "^1.0.6",
-    "tailwindcss": "^1.6.2",
-    "victory": "^35.0.8"
+    "tailwindcss": "^1.6.2"
   },
   "devDependencies": {
     "prettier": "2.0.5"

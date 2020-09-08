@@ -1,10 +1,26 @@
+/* Tailwind */
 @tailwind base
 @tailwind components
 @tailwind utilities
 
+/* Imports */
 @import 'footer'
 @import 'nav'
 
+/* Colors */
+.bg-brand-primary
+  background: theme('colors.primary')
+.primary
+  color: theme('colors.primary')
+
+/* Box sizing partial styles: */
+/* Apply a natural box layout model to all elements */
+*,
+*:before,
+*:after
+  box-sizing: border-box
+
+/* App */
 html,
 body
   overflow-x: hidden
@@ -17,8 +33,9 @@ body
   -webkit-font-smoothing: auto
   text-rendering: optimizeLegibility
   letter-spacing: -0.5px
-  background: theme('colors.primary')
+  background: black
   transition: all 0.2s ease-in-out
+  color: black
 
 textarea,
 button,
@@ -63,6 +80,50 @@ img
 .inherit
   color: inherit
 
+.lh-body
+  line-height: 1.85
+
+.overlay-gradient
+  &:after
+    background: rgba(0, 0, 0, 0.4)
+    position: absolute
+    display: block
+    content: ""
+    height: 100%
+    width: 100%
+    right: 0
+    left: 0
+    top: 0
+
+    @media screen and (min-width: 60em)
+      background: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0) 50%)
+
+.overlay
+  &:after
+    background: rgba(0, 0, 0, 0.4)
+    position: absolute
+    display: block
+    content: ""
+    height: 100%
+    width: 100%
+    right: 0
+    left: 0
+    top: 0
+
+.form
+  input
+    @media screen and (min-width: 60em)
+      flex: 1 1 auto
+
+  button
+    @media screen and (min-width: 60em)
+      flex: 0 0 auto
+
+  input,
+  button
+    @media screen and (max-width: 30em)
+      width: 100%
+
 hr
   border-top: none
 
@@ -70,19 +131,15 @@ hr
   ul
     list-style: disc
 
-p
-  a
-    text-decoration: underline
-    color: theme('colors.primary')
-
 figure
   margin: 1rem auto
 
 .feature
   max-height: 64rem
 
-text
-  tspan
-    font-family: theme('fontFamily.sans') !important
-    font-weight: bold !important
-    font-size: 0.5rem !important
+.intro
+  background: url('/img/background.jpg') no-repeat center center
+  background-size: cover
+
+.spaceman
+  transform: translate3d(-4rem, -4rem, 0)

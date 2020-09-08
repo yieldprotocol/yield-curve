@@ -1,19 +1,19 @@
 import React from 'react'
 import { Link } from 'gatsby'
 
-const ButtonClass = 'inline-block relative w-full text-center font-bold px-4 py-3 text-base rounded'
+const ButtonClass = 'inline-block relative text-center'
 
 class Button extends React.Component {
   render() {
-    const { outlined, external, primary, margin, full, type, text, to } = this.props
+    const { outlined, external, primary, margin, small, full, type, text, to } = this.props
 
-    const RenderClass = `${ButtonClass} ${
+    const RenderClass = `${ButtonClass} ${small ? 'text-sm' : 'font-bold text-base'} ${
       outlined
-        ? 'border-2 border-solid border-primary bg-transparent text-primary'
-        : 'bg-primary text-white'
-    } ${primary ? 'border-2 border-solid border-primary bg-primary' : 'bg-transparent'} ${
-      margin ? margin : ''
-    } ${full ? 'md:w-full' : 'md:w-auto'}`
+        ? 'border-2 border-solid border-primary bg-transparent text-primary px-4 py-3'
+        : 'underline link bg-transparent'
+    } ${
+      primary ? 'border-2 border-solid border-primary bg-primary text-white' : 'bg-transparent'
+    } ${margin ? margin : ''} ${full ? 'md:w-full' : 'md:w-auto'}`
 
     return (
       <>
