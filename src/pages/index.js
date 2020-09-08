@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useReducer } from 'react'
-import { ethers, BigNumber } from 'ethers'
+import React, { useState, useEffect } from 'react'
 import { Chart } from 'react-charts'
+import { ethers, BigNumber } from 'ethers'
 
 // Component(s)
 import GraphQLErrorList from '../components/graphql-error-list'
@@ -11,7 +11,10 @@ import SEO from '../components/seo'
 import Layout from '../containers/layout'
 
 // Pool
-import Pool from '../contracts/pool'
+import Pool from '../contracts/pool.json'
+
+// Utils
+import * as utils from '../utils'
 
 export const query = graphql`
   query IndexPageQuery {
@@ -28,85 +31,138 @@ export const query = graphql`
 const ParagraphClass = 'text-sm lg:text-baseline text-gray-500 mb-8'
 const HeadingClass = 'text-2xl lg:text-4xl font-bold font-display mb-6'
 
+// Reducer
+function reducer(state, action) {
+  switch (action.type) {
+    case 'updateRates':
+      return {
+        ...state,
+        seriesRates: action.payload,
+      }
+    default:
+      return state
+  }
+}
+
 const IndexPage = (props) => {
   const { data, errors } = props
 
+  // Default provider
+  const provider = ethers.getDefaultProvider('rinkeby')
+
   // Set state for yields
-  const [haveReserves, setHaveReserves] = React.useState(false)
-  const [reserves, setReserves] = React.useState([])
+  const initState = {
+    seriesRates: new Map(),
+  }
+  const [state, dispatch] = React.useReducer(reducer, initState)
 
   // State for addresses
   const [addresses] = useState([
     {
       address: '0x34F9dB53Ec17b03Eb173B6487DFb4CA6703F6af9',
-      date: new Date('2021-12-31'),
+      maturity: new Date('2021-12-31').getTime(),
     },
     {
-      address: '0xa160AC2C5f7a429865aD7586fb71d804A24D1a54', // this should be 0x4f5AF74C1cd306B03144e9F94fE9317FADEE88e5 but testing the 0 case scenario first
-      date: new Date('2021-01-01'),
+      address: '0x4f5AF74C1cd306B03144e9F94fE9317FADEE88e5',
+      maturity: new Date('2021-01-01').getTime(),
     },
     {
       address: '0x8f29250B6510433C4ddCaf747621e00Ea0279654',
-      date: new Date('2020-09-06'),
+      maturity: new Date('2020-09-06').getTime(),
     },
     {
       address: '0xcdAd94bAd9AF4c9a4E1b6Bf33545F68191f8060E',
-      date: new Date('2021-10-01'),
+      maturity: new Date('2021-10-01').getTime(),
     },
   ])
 
-  // Set as a const to prevent infinite loop due to useEffect hook
-  const fetchReserves = async () => {
-    try {
-      const provider = ethers.getDefaultProvider('rinkeby')
+  /* Annualized yield rate */
+  const yieldAPR = (
+    _rate,
+    _return,
+    _maturity,
+    _fromDate = Math.round(new Date().getTime() / 1000) // if not provided, defaults to current time.
+  ) => {
+    if (_maturity > Math.round(new Date().getTime() / 1000)) {
+      const secsToMaturity = _maturity - _fromDate
+      const propOfYear = secsToMaturity / utils.SECONDS_PER_YEAR
+      const priceRatio =
+        parseFloat(ethers.utils.formatEther(_return)) / parseFloat(ethers.utils.formatEther(_rate))
+      const powRatio = 1 / propOfYear
+      const apr = Math.pow(priceRatio, powRatio) - 1
+      return apr * 100
+    }
+    return 0
+  }
 
-      const results = []
+  /* Get the yield market rates for a particular set of series */
+  const _getRates = async (seriesArr) => {
+    /* 
+      Rates:
+        sellYDai -> Returns how much Dai would be obtained by selling 1 yDai
+        buyDai -> Returns how much yDai would be required to buy 1 Dai
+        buyYDai -> Returns how much Dai would be required to buy 1 yDai
+        sellDai -> Returns how much yDai would be obtained by selling 1 Dai
+    */
+    const ratesData = await Promise.allSettled(
+      seriesArr.map(async (x, i) => {
+        const _x = { ...x, isMature: () => x.maturity < Math.round(new Date().getTime() / 1000) }
+        const contract = new ethers.Contract(x.address, Pool.abi, provider)
+        const amount = 1
+        const parsedAmount = BigNumber.isBigNumber(amount)
+          ? amount
+          : ethers.utils.parseEther(amount.toString())
+        const preview = await contract.sellDaiPreview(parsedAmount)
+        const inEther = ethers.utils.formatEther(preview.toString())
+        const object = {
+          address: _x.address,
+          maturity: x.maturity,
+          isMature: _x.isMature(),
+          sellPreview: inEther,
+        }
+        console.log(object) // logging the object from above
+        return object
+      }, state.seriesRates)
+    )
 
-      await Promise.all(
-        addresses.map(async (obj) => {
-          const contract = new ethers.Contract(obj.address, Pool.abi, provider)
-          const getYDaiReserves = await contract.getYDaiReserves()
-          const reservesEth = ethers.utils.formatEther(getYDaiReserves) / 100000
-          // console.log(reservesEth)
-          results.push({
-            // x: `${obj.date.getUTCMonth() + 1}/${obj.date.getUTCFullYear()}`,
-            x: obj.date.getUTCMonth() + 1,
-            y: reservesEth,
-          })
-        })
-      )
-      const sortedResults = results.sort((a, b) => b.x - a.x)
-      const filteredResults = sortedResults.filter((i) => i.y > 0)
-      setHaveReserves(true)
-      setReserves(filteredResults)
-    } catch (error) {
-      console.log(error)
-      setHaveReserves(false)
+    const filteredRates = ratesData.filter((p) => p.status === 'fulfilled')
+
+    /* update context state and return */
+    dispatch({ type: 'updateRates', payload: filteredRates })
+    return filteredRates
+  }
+
+  /* Update list */
+  const updateSeries = async () => {
+    const rates = await _getRates(addresses)
+    if (rates) {
+      rates.map((object) => {
+        const getAPR = yieldAPR(object.value.sellPreview, object.value.maturity)
+        console.log(`APR: ${getAPR} for ${object.value.address}`)
+      })
     }
   }
 
-  // Only run this once per render
+  /* Run on page load */
   useEffect(() => {
-    fetchReserves()
-  }, [haveReserves])
-
-  console.log(reserves)
+    /* Get series rates and update */
+    updateSeries()
+  }, [])
 
   const chartData = React.useMemo(
     () => [
       {
         // label: 'Series 1',
-        // data: [
-        //   [0, 1],
-        //   [1, 2],
-        //   [2, 4],
-        //   [3, 2],
-        //   [4, 7],
-        // ],
-        data: [...reserves],
+        data: [
+          [0, 1],
+          [1, 2],
+          [2, 4],
+          [3, 2],
+          [4, 7],
+        ],
       },
     ],
-    [reserves]
+    []
   )
 
   const axes = React.useMemo(
