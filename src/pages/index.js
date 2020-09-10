@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Chart } from 'react-charts'
-import { ethers, BigNumber } from 'ethers'
+
+let ethers
+if (process.browser) {
+  import { ethers, BigNumber } from 'ethers'
+}
 
 // Component(s)
 import GraphQLErrorList from '../components/graphql-error-list'
