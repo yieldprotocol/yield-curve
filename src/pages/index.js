@@ -54,7 +54,9 @@ const IndexPage = (props) => {
   const initState = {
     seriesRates: new Map(),
   }
+
   const [state, dispatch] = React.useReducer(reducer, initState)
+  const [chartData, updateChartData] = React.useState([])
 
   // State for addresses
   const [addresses] = useState([
@@ -135,11 +137,18 @@ const IndexPage = (props) => {
   /* Update list */
   const updateSeries = async () => {
     const rates = await _getRates(addresses)
-    if (rates) {
-      rates.map((object) => {
+    if (rates && rates.length > 0) {
+      let passData = []
+      rates.map((object, index) => {
         const getAPR = yieldAPR(object.value.sellPreview, object.value.maturity)
         console.log(`APR: ${getAPR} for ${object.value.address}`)
+        passData.push([index, getAPR])
       })
+      updateChartData([
+        {
+          data: passData,
+        },
+      ])
     }
   }
 
@@ -149,21 +158,21 @@ const IndexPage = (props) => {
     updateSeries()
   }, [])
 
-  const chartData = React.useMemo(
-    () => [
-      {
-        // label: 'Series 1',
-        data: [
-          [0, 1],
-          [1, 2],
-          [2, 4],
-          [3, 2],
-          [4, 7],
-        ],
-      },
-    ],
-    []
-  )
+  // const chartData = React.useMemo(
+  //   () => [
+  //     {
+  //       // label: 'Series 1',
+  //       data: [
+  //         [0, 1],
+  //         [1, 2],
+  //         [2, 4],
+  //         [3, 2],
+  //         [4, 7],
+  //       ],
+  //     },
+  //   ],
+  //   []
+  // )
 
   const axes = React.useMemo(
     () => [
