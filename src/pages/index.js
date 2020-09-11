@@ -69,20 +69,20 @@ const IndexPage = (props) => {
   /* State for addresses */
   const [addresses] = useState([
     {
-      address: '0x34F9dB53Ec17b03Eb173B6487DFb4CA6703F6af9',
-      maturity: new Date('2021-12-31').getTime(),
+      address: '0x14936e0a12B22F076Ff5232613A1F50094E533e6',
+      maturity: new Date('2020-09-12').getTime(),
     },
     {
-      address: '0x4f5AF74C1cd306B03144e9F94fE9317FADEE88e5',
+      address: '0xA4C9CCe32baE8664679cb4731419F4fc9D93fAE4',
       maturity: new Date('2021-01-01').getTime(),
     },
     {
-      address: '0x8f29250B6510433C4ddCaf747621e00Ea0279654',
-      maturity: new Date('2020-09-06').getTime(),
+      address: '0x8F8fF4Fa21e47144800b71486Cd4d3bad77F51b5',
+      maturity: new Date('2021-10-01').getTime(),
     },
     {
-      address: '0xcdAd94bAd9AF4c9a4E1b6Bf33545F68191f8060E',
-      maturity: new Date('2021-10-01').getTime(),
+      address: '0x27f04582b5948d4964990D746981250072f4A3B1',
+      maturity: new Date('2021-12-31').getTime(),
     },
   ])
 
