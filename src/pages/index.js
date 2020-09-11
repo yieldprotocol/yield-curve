@@ -43,6 +43,9 @@ function reducer(state, action) {
 const IndexPage = (props) => {
   const { data, errors } = props
 
+  /* Seconds per year */
+  const secondsPerYear = 365 * 24 * 60 * 60
+
   /* Set state for yields */
   const initState = {
     seriesRates: new Map(),
@@ -92,7 +95,7 @@ const IndexPage = (props) => {
   ) => {
     if (_maturity > Math.round(new Date().getTime() / 1000)) {
       const secsToMaturity = _maturity - _fromDate
-      const propOfYear = secsToMaturity / 365 * 24 * 60 * 60 // seconds per year
+      const propOfYear = secsToMaturity / secondsPerYear
       const priceRatio =
         parseFloat(ethers.utils.formatEther(_return)) / parseFloat(ethers.utils.formatEther(_rate))
       const powRatio = 1 / propOfYear
