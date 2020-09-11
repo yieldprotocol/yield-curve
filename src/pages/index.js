@@ -12,9 +12,6 @@ import Layout from '../containers/layout'
 // Pool
 import Pool from '../contracts/pool.json'
 
-// Utils
-import * as utils from '../utils'
-
 export const query = graphql`
   query IndexPageQuery {
     site {
@@ -57,15 +54,12 @@ const IndexPage = (props) => {
 
   /* Update imports */
   let ethers
-  let BigNumber
   let provider
   const getImports = async () => {
-    if (process.browser) {
+    if (process.browser && typeof window !== 'undefined') {
       ethers = require('ethers')
-      BigNumber = require('ethers')
       // Default provider
       provider = ethers.getDefaultProvider('rinkeby')
-      // console.log(ethers)
     }
   }
 
@@ -98,7 +92,7 @@ const IndexPage = (props) => {
   ) => {
     if (_maturity > Math.round(new Date().getTime() / 1000)) {
       const secsToMaturity = _maturity - _fromDate
-      const propOfYear = secsToMaturity / utils.SECONDS_PER_YEAR
+      const propOfYear = secsToMaturity / 365 * 24 * 60 * 60 // seconds per year
       const priceRatio =
         parseFloat(ethers.utils.formatEther(_return)) / parseFloat(ethers.utils.formatEther(_rate))
       const powRatio = 1 / propOfYear
