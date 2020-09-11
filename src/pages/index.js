@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Chart } from 'react-charts'
 
-let ethers
-if (process.browser) {
-  import { ethers, BigNumber } from 'ethers'
-}
-
 // Component(s)
 import GraphQLErrorList from '../components/graphql-error-list'
 import ContainerFull from '../components/container-full'
@@ -51,18 +46,30 @@ function reducer(state, action) {
 const IndexPage = (props) => {
   const { data, errors } = props
 
-  // Default provider
-  const provider = ethers.getDefaultProvider('rinkeby')
-
-  // Set state for yields
+  /* Set state for yields */
   const initState = {
     seriesRates: new Map(),
   }
 
-  const [state, dispatch] = React.useReducer(reducer, initState)
   const [chartData, updateChartData] = React.useState([])
+  // const [provider, updateProvider] = React.useState({})
+  const [state, dispatch] = React.useReducer(reducer, initState)
 
-  // State for addresses
+  /* Update imports */
+  let ethers
+  let BigNumber
+  let provider
+  const getImports = async () => {
+    if (process.browser) {
+      ethers = require('ethers')
+      BigNumber = require('ethers')
+      // Default provider
+      provider = ethers.getDefaultProvider('rinkeby')
+      // console.log(ethers)
+    }
+  }
+
+  /* State for addresses */
   const [addresses] = useState([
     {
       address: '0x34F9dB53Ec17b03Eb173B6487DFb4CA6703F6af9',
@@ -115,7 +122,7 @@ const IndexPage = (props) => {
         const _x = { ...x, isMature: () => x.maturity < Math.round(new Date().getTime() / 1000) }
         const contract = new ethers.Contract(x.address, Pool.abi, provider)
         const amount = 1
-        const parsedAmount = BigNumber.isBigNumber(amount)
+        const parsedAmount = ethers.BigNumber.isBigNumber(amount)
           ? amount
           : ethers.utils.parseEther(amount.toString())
         const preview = await contract.sellDaiPreview(parsedAmount)
@@ -158,6 +165,8 @@ const IndexPage = (props) => {
 
   /* Run on page load */
   useEffect(() => {
+    /* Get these imports if browser */
+    getImports()
     /* Get series rates and update */
     updateSeries()
   }, [])
