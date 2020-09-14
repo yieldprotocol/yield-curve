@@ -156,7 +156,7 @@ const IndexPage = (props) => {
           object.value.maturity // _maturity
         )
         const maturityDate = new Date(object.value.maturity)
-        const setDate = `${maturityDate.getFullYear() + 1}/${
+        const setDate = `${maturityDate.getFullYear()}/${
           maturityDate.getMonth() + 1
         }/${maturityDate.getDate()}`
         console.log(
@@ -166,6 +166,22 @@ const IndexPage = (props) => {
       })
       updateChartData(passData)
       dispatch({ type: 'updateLastMonth', payload: rates.splice(-1)[0] })
+      /* Update last date */
+      // let dateObj = new Date()
+      // const lastMonthDate = new Date(lastMonth)
+      /* Test */
+      // const dateStrings = []
+      // const dateFormatOptions = {
+      //   month: 'long',
+      //   year: 'numeric',
+      // }
+
+      // for (var i = 0; i < 12; ++i) {
+      //   dateStrings.unshift(lastMonthDate.toLocaleString('en-US', dateFormatOptions))
+      //   dateObj.setMonth(lastMonthDate.getMonth() - 1)
+      // }
+
+      // console.log(dateStrings)
     }
   }
 
