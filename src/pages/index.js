@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Chart } from 'react-charts'
+import { Line } from 'react-chartjs-2'
 
 // Component(s)
 import GraphQLErrorList from '../components/graphql-error-list'
@@ -35,6 +35,11 @@ function reducer(state, action) {
         ...state,
         seriesRates: action.payload,
       }
+    case 'updateLastMonth':
+      return {
+        ...state,
+        lastMonth: action.payload,
+      }
     default:
       return state
   }
@@ -44,15 +49,15 @@ const IndexPage = (props) => {
   const { data, errors } = props
 
   /* Seconds per year */
-  const secondsPerYear = 365 * 24 * 60 * 60
+  const secondsPerYear = 365.25 * 24 * 60 * 60
 
   /* Set state for yields */
   const initState = {
     seriesRates: new Map(),
+    lastMonth: new Date(),
   }
 
   const [chartData, updateChartData] = React.useState([])
-  // const [provider, updateProvider] = React.useState({})
   const [state, dispatch] = React.useReducer(reducer, initState)
 
   /* Update imports */
@@ -61,6 +66,7 @@ const IndexPage = (props) => {
   const getImports = async () => {
     if (process.browser && typeof window !== 'undefined') {
       ethers = require('ethers')
+
       // Default provider
       provider = ethers.getDefaultProvider('kovan')
     }
@@ -69,51 +75,25 @@ const IndexPage = (props) => {
   /* State for addresses */
   const [addresses] = useState([
     {
-      address: '0x1f75D93d4EED495b197F5C2969ff4A0C307D8e8b',
-      maturity: new Date('2020-09-12').getTime(),
+      address: '0x8Ca57099937c9c7B0850882E62f16191638F95Db',
+      maturity: new Date('2020-09-15').getTime(),
     },
     {
-      address: '0x3134d9F01D21B6c2FEAb73A381Be8718ffac3A05',
+      address: '0xB370AFD9Efb99BD5CD0aD934AECfF00f949BC69c',
       maturity: new Date('2021-01-01').getTime(),
     },
     {
-      address: '0xA2F85b8Fe653902704144587A0C4C3A4986EA51f',
+      address: '0x2C6458E5B9B4b4C890cC9372447F04c7492EdA94',
       maturity: new Date('2021-10-01').getTime(),
     },
     {
-      address: '0x458CDd18e4D4Db38BabAC1aBfe9520130a5D2fd0',
+      address: '0xd160C973a098608e2D7d6E43C64Eee48766800D1',
       maturity: new Date('2021-12-31').getTime(),
     },
   ])
 
-  /* Annualized yield rate */
-  const yieldAPR = (
-    _rate,
-    _return,
-    _maturity,
-    _fromDate = Math.round(new Date().getTime() / 1000) // if not provided, defaults to current time.
-  ) => {
-    if (_maturity > Math.round(new Date().getTime() / 1000)) {
-      const secsToMaturity = _maturity - _fromDate
-      const propOfYear = secsToMaturity / secondsPerYear
-      const priceRatio =
-        parseFloat(ethers.utils.formatEther(_return)) / parseFloat(ethers.utils.formatEther(_rate))
-      const powRatio = 1 / propOfYear
-      const apr = Math.pow(priceRatio, powRatio) - 1
-      return apr * 100
-    }
-    return 0
-  }
-
   /* Get the yield market rates for a particular set of series */
   const _getRates = async (seriesArr) => {
-    /* 
-      Rates:
-        sellYDai -> Returns how much Dai would be obtained by selling 1 yDai
-        buyDai -> Returns how much yDai would be required to buy 1 Dai
-        buyYDai -> Returns how much Dai would be required to buy 1 yDai
-        sellDai -> Returns how much yDai would be obtained by selling 1 Dai
-    */
     const ratesData = await Promise.allSettled(
       seriesArr.map(async (x, i) => {
         const _x = { ...x, isMature: () => x.maturity < Math.round(new Date().getTime() / 1000) }
@@ -122,7 +102,7 @@ const IndexPage = (props) => {
         const parsedAmount = ethers.BigNumber.isBigNumber(amount)
           ? amount
           : ethers.utils.parseEther(amount.toString())
-        const preview = await contract.sellDaiPreview(parsedAmount)
+        const preview = await contract.sellEDaiPreview(parsedAmount)
         const inEther = ethers.utils.formatEther(preview.toString())
         const object = {
           address: _x.address,
@@ -130,16 +110,38 @@ const IndexPage = (props) => {
           isMature: _x.isMature(),
           sellPreview: inEther,
         }
-        console.log(object) // logging the object from above
         return object
       }, state.seriesRates)
     )
 
-    const filteredRates = ratesData.filter((p) => p.status === 'fulfilled')
+    const filteredRates = ratesData.filter((p) => {
+      return p.status === 'fulfilled'
+    })
 
     /* update context state and return */
     dispatch({ type: 'updateRates', payload: filteredRates })
     return filteredRates
+  }
+
+  /* Annualized yield rate */
+  const yieldAPR = (
+    _rate,
+    _return,
+    _maturity,
+    // _fromDate = Math.round(new Date().getTime() / 1000) // if not provided, defaults to current time.
+    _fromDate = 1600103860
+  ) => {
+    // console.log(`Raw rate: ${_rate}`, `Raw return: ${_return}`, `Parsed maturity: ${_maturity}`)
+    if (_maturity > Math.round(new Date().getTime() / 1000)) {
+      const secsToMaturity = _maturity / 1000 - _fromDate
+      const propOfYear = secsToMaturity / secondsPerYear
+      const formatReturn = parseFloat(1.0) // override to use float
+      const priceRatio = formatReturn / _rate
+      const powRatio = 1 / propOfYear
+      const apr = Math.pow(priceRatio, powRatio) - 1
+      return apr * 100
+    }
+    return 0
   }
 
   /* Update list */
@@ -147,16 +149,23 @@ const IndexPage = (props) => {
     const rates = await _getRates(addresses)
     if (rates && rates.length > 0) {
       let passData = []
-      rates.map((object, index) => {
-        const getAPR = yieldAPR(object.value.sellPreview, object.value.maturity)
-        console.log(`APR: ${getAPR} for ${object.value.address}`)
-        passData.push([index, getAPR])
+      rates.map((object) => {
+        const getAPR = yieldAPR(
+          object.value.sellPreview, // _rate
+          1, // _return
+          object.value.maturity // _maturity
+        )
+        const maturityDate = new Date(object.value.maturity)
+        const setDate = `${maturityDate.getFullYear() + 1}/${
+          maturityDate.getMonth() + 1
+        }/${maturityDate.getDate()}`
+        console.log(
+          `APR: ${getAPR} for ${object.value.address}, sellPreview: ${object.value.sellPreview}, maturing on ${maturityDate}`
+        )
+        passData.push({ x: setDate, y: getAPR })
       })
-      updateChartData([
-        {
-          data: passData,
-        },
-      ])
+      updateChartData(passData)
+      dispatch({ type: 'updateLastMonth', payload: rates.splice(-1)[0] })
     }
   }
 
@@ -167,30 +176,6 @@ const IndexPage = (props) => {
     /* Get series rates and update */
     updateSeries()
   }, [])
-
-  // const chartData = React.useMemo(
-  //   () => [
-  //     {
-  //       // label: 'Series 1',
-  //       data: [
-  //         [0, 1],
-  //         [1, 2],
-  //         [2, 4],
-  //         [3, 2],
-  //         [4, 7],
-  //       ],
-  //     },
-  //   ],
-  //   []
-  // )
-
-  const axes = React.useMemo(
-    () => [
-      { primary: true, type: 'linear', position: 'bottom' },
-      { type: 'linear', position: 'left' },
-    ],
-    []
-  )
 
   if (errors) {
     return (
@@ -210,22 +195,73 @@ const IndexPage = (props) => {
   const siteDescription = site.siteMetadata.description
   const siteKeywords = site.siteMetadata.keywords
 
+  const newData = {
+    labels: chartData.map((o, i) => {
+      return o.x
+    }),
+    datasets: [
+      {
+        borderColor: '#FFF',
+        data: chartData.map((o, i) => {
+          return o.y
+        }),
+        fill: false,
+      },
+    ],
+  }
+
+  const labelOptions = {
+    fontWeight: '500',
+    fontColor: '#999',
+    fontSize: '18',
+    display: true,
+  }
+
+  const options = {
+    responsive: true,
+    title: {
+      display: false,
+      text: 'Chart Title',
+    },
+    scales: {
+      xAxes: [
+        {
+          scaleLabel: {
+            ...labelOptions,
+            labelString: 'Maturity',
+          },
+        },
+      ],
+      yAxes: [
+        {
+          scaleLabel: {
+            ...labelOptions,
+            labelString: 'Yield (APR)',
+          },
+          ticks: {
+            suggestedMin: 0,
+            suggestedMax: 100,
+          },
+        },
+      ],
+    },
+  }
+
+  const legend = {
+    display: false,
+  }
+
   return (
     <Layout>
       <SEO title={siteTitle} description={siteDescription} keywords={siteKeywords} />
       <ContainerFull>
-        <div className="inline-block relative w-full h-screen text-center overflow-hidden">
+        <div className="inline-block relative w-full text-center overflow-hidden">
           <div className="inline-block w-full">
             <h1 className={HeadingClass}>The Yield Curve</h1>
             <p className={ParagraphClass}>Uhhh.... the curves yield, yo!</p>
           </div>
-          <div
-            className="inline-block relative w-full"
-            style={{
-              height: '50vh',
-            }}
-          >
-            <Chart data={chartData} axes={axes} dark />
+          <div className="inline-block relative w-full max-w-6xl">
+            <Line options={options} legend={legend} data={newData} />
           </div>
         </div>
       </ContainerFull>
