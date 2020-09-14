@@ -76,19 +76,19 @@ const IndexPage = (props) => {
   const [addresses] = useState([
     {
       address: '0x8Ca57099937c9c7B0850882E62f16191638F95Db',
-      maturity: new Date('2020-09-15').getTime(),
+      maturity: new Date('2020-09-15 GMT-0000').getTime(),
     },
     {
       address: '0xB370AFD9Efb99BD5CD0aD934AECfF00f949BC69c',
-      maturity: new Date('2021-01-01').getTime(),
+      maturity: new Date('2021-01-01 GMT-0000').getTime(),
     },
     {
       address: '0x2C6458E5B9B4b4C890cC9372447F04c7492EdA94',
-      maturity: new Date('2021-10-01').getTime(),
+      maturity: new Date('2021-10-01 GMT-0000').getTime(),
     },
     {
       address: '0xd160C973a098608e2D7d6E43C64Eee48766800D1',
-      maturity: new Date('2021-12-31').getTime(),
+      maturity: new Date('2021-12-31 GMT-0000').getTime(),
     },
   ])
 
@@ -154,17 +154,34 @@ const IndexPage = (props) => {
           1, // _return
           object.value.maturity // _maturity
         )
-        const maturityDate = new Date(object.value.maturity)
-        const setDate = `${maturityDate.getFullYear()}/${
-          maturityDate.getMonth() + 1
-        }/${maturityDate.getDate()}`
+        const maturity = new Date(object.value.maturity)
+        const maturityYear = maturity.getUTCFullYear()
+        const maturityMonth = maturity.getUTCMonth() + 1
+        const maturityDate = maturity.getUTCDate()
+        const setDate = `${maturityYear}/${maturityMonth}/${maturityDate}`
         console.log(
-          `APR: ${getAPR} for ${object.value.address}, sellPreview: ${object.value.sellPreview}, maturing on ${maturityDate}`
+          `APR: ${getAPR} for ${object.value.address}, sellPreview: ${object.value.sellPreview}, maturing on ${setDate}`
         )
         passData.push({ x: setDate, y: getAPR })
       })
       updateChartData(passData)
       dispatch({ type: 'updateLastMonth', payload: rates.splice(-1)[0] })
+      /* Update last date */
+      // let dateObj = new Date()
+      // const lastMonthDate = new Date(lastMonth)
+      /* Test */
+      // const dateStrings = []
+      // const dateFormatOptions = {
+      //   month: 'long',
+      //   year: 'numeric',
+      // }
+
+      // for (var i = 0; i < 12; ++i) {
+      //   dateStrings.unshift(lastMonthDate.toLocaleString('en-US', dateFormatOptions))
+      //   dateObj.setMonth(lastMonthDate.getMonth() - 1)
+      // }
+
+      // console.log(dateStrings)
     }
   }
 
@@ -194,6 +211,9 @@ const IndexPage = (props) => {
   const siteDescription = site.siteMetadata.description
   const siteKeywords = site.siteMetadata.keywords
 
+  const defaultFont = "'Syne', 'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'"
+  const tickFont = "'Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'"
+
   const newData = {
     labels: chartData.map((o, i) => {
       return o.x
@@ -210,6 +230,7 @@ const IndexPage = (props) => {
   }
 
   const labelOptions = {
+    fontFamily: defaultFont,
     fontWeight: '500',
     fontColor: '#999',
     fontSize: '18',
@@ -218,6 +239,12 @@ const IndexPage = (props) => {
 
   const options = {
     responsive: true,
+    legend: {
+      labels: {
+        fontFamily: defaultFont,
+      },
+      display: false,
+    },
     title: {
       display: false,
       text: 'Chart Title',
@@ -227,8 +254,11 @@ const IndexPage = (props) => {
         {
           scaleLabel: {
             ...labelOptions,
-            labelString: 'Maturity',
+            labelString: 'Maturity (UTC/GMT+0)',
           },
+          ticks: {
+            fontFamily: tickFont,
+          }
         },
       ],
       yAxes: [
@@ -238,16 +268,13 @@ const IndexPage = (props) => {
             labelString: 'Yield (APR)',
           },
           ticks: {
-            suggestedMin: 0,
+            // suggestedMin: 0,
             suggestedMax: 100,
+            fontFamily: tickFont,
           },
         },
       ],
     },
-  }
-
-  const legend = {
-    display: false,
   }
 
   return (
@@ -260,7 +287,7 @@ const IndexPage = (props) => {
             <p className={ParagraphClass}>Uhhh.... the curves yield, yo!</p>
           </div>
           <div className="inline-block relative w-full max-w-6xl">
-            <Line options={options} legend={legend} data={newData} />
+            <Line options={options} data={newData} />
           </div>
         </div>
       </ContainerFull>
