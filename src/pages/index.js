@@ -128,8 +128,7 @@ const IndexPage = (props) => {
     _rate,
     _return,
     _maturity,
-    // _fromDate = Math.round(new Date().getTime() / 1000) // if not provided, defaults to current time.
-    _fromDate = 1600103860
+    _fromDate = Math.round(new Date().getTime() / 1000) // if not provided, defaults to current time.
   ) => {
     // console.log(`Raw rate: ${_rate}`, `Raw return: ${_return}`, `Parsed maturity: ${_maturity}`)
     if (_maturity > Math.round(new Date().getTime() / 1000)) {
@@ -166,22 +165,6 @@ const IndexPage = (props) => {
       })
       updateChartData(passData)
       dispatch({ type: 'updateLastMonth', payload: rates.splice(-1)[0] })
-      /* Update last date */
-      // let dateObj = new Date()
-      // const lastMonthDate = new Date(lastMonth)
-      /* Test */
-      // const dateStrings = []
-      // const dateFormatOptions = {
-      //   month: 'long',
-      //   year: 'numeric',
-      // }
-
-      // for (var i = 0; i < 12; ++i) {
-      //   dateStrings.unshift(lastMonthDate.toLocaleString('en-US', dateFormatOptions))
-      //   dateObj.setMonth(lastMonthDate.getMonth() - 1)
-      // }
-
-      // console.log(dateStrings)
     }
   }
 
