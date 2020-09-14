@@ -62,26 +62,26 @@ const IndexPage = (props) => {
     if (process.browser && typeof window !== 'undefined') {
       ethers = require('ethers')
       // Default provider
-      provider = ethers.getDefaultProvider('rinkeby')
+      provider = ethers.getDefaultProvider('kovan')
     }
   }
 
   /* State for addresses */
   const [addresses] = useState([
     {
-      address: '0x14936e0a12B22F076Ff5232613A1F50094E533e6',
+      address: '0x1f75D93d4EED495b197F5C2969ff4A0C307D8e8b',
       maturity: new Date('2020-09-12').getTime(),
     },
     {
-      address: '0xA4C9CCe32baE8664679cb4731419F4fc9D93fAE4',
+      address: '0x3134d9F01D21B6c2FEAb73A381Be8718ffac3A05',
       maturity: new Date('2021-01-01').getTime(),
     },
     {
-      address: '0x8F8fF4Fa21e47144800b71486Cd4d3bad77F51b5',
+      address: '0xA2F85b8Fe653902704144587A0C4C3A4986EA51f',
       maturity: new Date('2021-10-01').getTime(),
     },
     {
-      address: '0x27f04582b5948d4964990D746981250072f4A3B1',
+      address: '0x458CDd18e4D4Db38BabAC1aBfe9520130a5D2fd0',
       maturity: new Date('2021-12-31').getTime(),
     },
   ])
