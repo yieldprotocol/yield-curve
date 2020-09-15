@@ -75,20 +75,20 @@ const IndexPage = (props) => {
   /* State for addresses */
   const [addresses] = useState([
     {
-      address: '0x8Ca57099937c9c7B0850882E62f16191638F95Db',
-      maturity: new Date('2020-09-15 GMT-0000').getTime(),
+      address: '0x2bB665E8fF1C90dA53Ed59D17AF17FA0F391fecb',
+      maturity: new Date('2020-10-01 GMT-0000').getTime(),
     },
     {
-      address: '0xB370AFD9Efb99BD5CD0aD934AECfF00f949BC69c',
+      address: '0x02FC2277F50Dd4f4D8B4573A1465e4af0aCf5443',
       maturity: new Date('2021-01-01 GMT-0000').getTime(),
     },
     {
-      address: '0x2C6458E5B9B4b4C890cC9372447F04c7492EdA94',
-      maturity: new Date('2021-10-01 GMT-0000').getTime(),
+      address: '0xc5FA3007417b0Ed34ce34a8Bc55d70A737b737dE',
+      maturity: new Date('2021-04-01 GMT-0000').getTime(),
     },
     {
-      address: '0xd160C973a098608e2D7d6E43C64Eee48766800D1',
-      maturity: new Date('2021-12-31 GMT-0000').getTime(),
+      address: '0x9570Baddd775E5086865DFdcbfd95C2F63FB88DE',
+      maturity: new Date('2021-07-01 GMT-0000').getTime(),
     },
   ])
 
@@ -126,16 +126,14 @@ const IndexPage = (props) => {
   /* Annualized yield rate */
   const yieldAPR = (
     _rate,
-    _return,
     _maturity,
     _fromDate = Math.round(new Date().getTime() / 1000) // if not provided, defaults to current time.
   ) => {
-    // console.log(`Raw rate: ${_rate}`, `Raw return: ${_return}`, `Parsed maturity: ${_maturity}`)
     if (_maturity > Math.round(new Date().getTime() / 1000)) {
       const secsToMaturity = _maturity / 1000 - _fromDate
       const propOfYear = secsToMaturity / secondsPerYear
-      const formatReturn = parseFloat(1.0) // override to use float
-      const priceRatio = formatReturn / _rate
+      const setReturn = parseFloat(1.0) // override to use float
+      const priceRatio = setReturn / _rate
       const powRatio = 1 / propOfYear
       const apr = Math.pow(priceRatio, powRatio) - 1
       return apr * 100
@@ -151,7 +149,6 @@ const IndexPage = (props) => {
       rates.map((object) => {
         const getAPR = yieldAPR(
           object.value.sellPreview, // _rate
-          1, // _return
           object.value.maturity // _maturity
         )
         const maturity = new Date(object.value.maturity)
@@ -166,22 +163,6 @@ const IndexPage = (props) => {
       })
       updateChartData(passData)
       dispatch({ type: 'updateLastMonth', payload: rates.splice(-1)[0] })
-      /* Update last date */
-      // let dateObj = new Date()
-      // const lastMonthDate = new Date(lastMonth)
-      /* Test */
-      // const dateStrings = []
-      // const dateFormatOptions = {
-      //   month: 'long',
-      //   year: 'numeric',
-      // }
-
-      // for (var i = 0; i < 12; ++i) {
-      //   dateStrings.unshift(lastMonthDate.toLocaleString('en-US', dateFormatOptions))
-      //   dateObj.setMonth(lastMonthDate.getMonth() - 1)
-      // }
-
-      // console.log(dateStrings)
     }
   }
 
