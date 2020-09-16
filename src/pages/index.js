@@ -75,19 +75,23 @@ const IndexPage = (props) => {
   /* State for addresses */
   const [addresses] = useState([
     {
-      address: '0x2bB665E8fF1C90dA53Ed59D17AF17FA0F391fecb',
-      maturity: new Date('2020-10-01 GMT-0000').getTime(),
+      address: '0xa4d02E3281E7CE2f1a398BA6DC79fdb5B537F731',
+      maturity: new Date('2020-09-01 GMT-0000').getTime(),
     },
     {
-      address: '0x02FC2277F50Dd4f4D8B4573A1465e4af0aCf5443',
+      address: '0x2CEFcB458Ad3da4E880F11611CE7AFA81afe059e',
+      maturity: new Date('2021-10-01 GMT-0000').getTime(),
+    },
+    {
+      address: '0xb2A07439559fb29E800655a4e3f9901aeB8A11a1',
       maturity: new Date('2021-01-01 GMT-0000').getTime(),
     },
     {
-      address: '0xc5FA3007417b0Ed34ce34a8Bc55d70A737b737dE',
+      address: '0x5284BF5D90852467dB2DBad700e0e98f2689C93b',
       maturity: new Date('2021-04-01 GMT-0000').getTime(),
     },
     {
-      address: '0x9570Baddd775E5086865DFdcbfd95C2F63FB88DE',
+      address: '0x1EC085F7ae44Ab95577F4F63fe4Eb1A5e8f16cf4',
       maturity: new Date('2021-07-01 GMT-0000').getTime(),
     },
   ])
@@ -163,6 +167,22 @@ const IndexPage = (props) => {
       })
       updateChartData(passData)
       dispatch({ type: 'updateLastMonth', payload: rates.splice(-1)[0] })
+      /* Update last date */
+      // let dateObj = new Date()
+      // const lastMonthDate = new Date(lastMonth)
+      /* Test */
+      // const dateStrings = []
+      // const dateFormatOptions = {
+      //   month: 'long',
+      //   year: 'numeric',
+      // }
+
+      // for (var i = 0; i < 12; ++i) {
+      //   dateStrings.unshift(lastMonthDate.toLocaleString('en-US', dateFormatOptions))
+      //   dateObj.setMonth(lastMonthDate.getMonth() - 1)
+      // }
+
+      // console.log(dateStrings)
     }
   }
 
