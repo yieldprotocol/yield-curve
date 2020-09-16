@@ -12,6 +12,16 @@ import Layout from '../containers/layout'
 // Pool
 import Pool from '../contracts/pool.json'
 
+// EDAI ABI
+const eDai = [
+  'function maturity() view returns (uint256)',
+  'function isMature() view returns(bool)',
+  'function mature()',
+  'function name() view returns (string)',
+  'function balanceOf(address) view returns (uint256)',
+  'function redeem(address, address, uint256)',
+]
+
 export const query = graphql`
   query IndexPageQuery {
     site {
@@ -76,42 +86,44 @@ const IndexPage = (props) => {
   const [addresses] = useState([
     {
       address: '0xa4d02E3281E7CE2f1a398BA6DC79fdb5B537F731',
-      maturity: new Date('2020-09-16 GMT-0000').getTime(),
     },
     {
       address: '0x2CEFcB458Ad3da4E880F11611CE7AFA81afe059e',
-      maturity: new Date('2021-10-01 GMT-0000').getTime(),
     },
     {
       address: '0xb2A07439559fb29E800655a4e3f9901aeB8A11a1',
-      maturity: new Date('2021-01-01 GMT-0000').getTime(),
     },
     {
       address: '0x5284BF5D90852467dB2DBad700e0e98f2689C93b',
-      maturity: new Date('2021-04-01 GMT-0000').getTime(),
     },
     {
       address: '0x1EC085F7ae44Ab95577F4F63fe4Eb1A5e8f16cf4',
-      maturity: new Date('2021-07-01 GMT-0000').getTime(),
     },
   ])
 
   /* Get the yield market rates for a particular set of series */
   const _getRates = async (seriesArr) => {
     const ratesData = await Promise.allSettled(
-      seriesArr.map(async (x, i) => {
-        const _x = { ...x, isMature: () => x.maturity < Math.round(new Date().getTime() / 1000) }
+      seriesArr.map(async (x) => {
         const contract = new ethers.Contract(x.address, Pool.abi, provider)
+
+        const eDaiAddress = await contract.eDai()
+        const eDaiContract = new ethers.Contract(eDaiAddress, eDai, provider)
+        const eDaiMaturity = await eDaiContract.maturity()
+        const parsedEDaiMaturity = new Date(parseInt(eDaiMaturity.toString()) * 1000)
+
         const amount = 1
         const parsedAmount = ethers.BigNumber.isBigNumber(amount)
           ? amount
           : ethers.utils.parseEther(amount.toString())
+
         const preview = await contract.sellEDaiPreview(parsedAmount)
+
         const inEther = ethers.utils.formatEther(preview.toString())
         const object = {
-          address: _x.address,
-          maturity: x.maturity,
-          isMature: _x.isMature(),
+          address: x.address,
+          maturity: parsedEDaiMaturity,
+          isMature: parsedEDaiMaturity < Math.round(new Date().getTime() / 1000),
           sellPreview: inEther,
         }
         return object
@@ -259,7 +271,7 @@ const IndexPage = (props) => {
           },
           ticks: {
             fontFamily: tickFont,
-          }
+          },
         },
       ],
       yAxes: [
