@@ -177,7 +177,7 @@ const IndexPage = (props) => {
         )
         passData.push({ x: setDate, y: getAPR })
       })
-      updateChartData(passData)
+      updateChartData(passData.sort((a, b) => b.x - a.x))
       dispatch({ type: 'updateLastMonth', payload: rates.splice(-1)[0] })
       /* Update last date */
       // let dateObj = new Date()
@@ -283,7 +283,7 @@ const IndexPage = (props) => {
           ticks: {
             fontFamily: tickFont,
             beginAtZero: 0,
-            min: 0
+            min: 0,
           },
         },
       ],
