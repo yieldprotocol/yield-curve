@@ -269,7 +269,7 @@ const IndexPage = (props) => {
             labelString: 'Yield (APR)',
           },
           ticks: {
-            // suggestedMin: 0,
+            suggestedMin: 0,
             suggestedMax: 100,
             fontFamily: tickFont,
           },
