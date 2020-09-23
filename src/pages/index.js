@@ -85,19 +85,19 @@ const IndexPage = (props) => {
   /* State for addresses */
   const [addresses] = useState([
     {
-      address: '0xa4d02E3281E7CE2f1a398BA6DC79fdb5B537F731',
+      address: '0xd091aCB6bee5164Bb8c7C899a39beE28d5b2Cd49',
     },
     {
-      address: '0x2CEFcB458Ad3da4E880F11611CE7AFA81afe059e',
+      address: '0xF037dea1DF9fF3556b5D1F721B3fcA31Fc814Dfa',
     },
     {
-      address: '0xb2A07439559fb29E800655a4e3f9901aeB8A11a1',
+      address: '0xA3013D3fdBc9B510a9480CB841cD38257beE8Da6',
     },
     {
-      address: '0x5284BF5D90852467dB2DBad700e0e98f2689C93b',
+      address: '0x5CB2E273D45b00026E2c69265dd9bb0E54498A28',
     },
     {
-      address: '0x1EC085F7ae44Ab95577F4F63fe4Eb1A5e8f16cf4',
+      address: '0xcB1019D169a9C37E00a2248bE38C4691a30B727C',
     },
   ])
 
