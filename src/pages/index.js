@@ -96,6 +96,11 @@ const IndexPage = (props) => {
     },
   ])
 
+  /* Round function */
+  function roundToTwo(num) {
+    return +(Math.round(num + 'e+2') + 'e-2')
+  }
+
   /* Get the yield market rates for a particular set of series */
   const _getRates = async (seriesArr) => {
     const ratesData = await Promise.allSettled(
@@ -170,7 +175,7 @@ const IndexPage = (props) => {
         // console.log(
         //   `APR: ${getAPR} for ${object.value.address}, sellPreview: ${object.value.sellPreview}, maturing on ${setDate}`
         // )
-        passData.push({ x: setDate, y: getAPR, date: maturity })
+        passData.push({ x: setDate, y: roundToTwo(getAPR), date: maturity })
       })
 
       const parseDateRange = passData.sort((a, b) => a.date - b.date)
@@ -274,7 +279,7 @@ const IndexPage = (props) => {
         {
           scaleLabel: {
             ...labelOptions,
-            labelString: 'Maturity (UTC/GMT+0)',
+            labelString: 'Maturity',
           },
           ticks: {
             fontFamily: tickFont,
