@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Line } from 'react-chartjs-2'
+import { eachMonthOfInterval } from 'date-fns'
 
 // Component(s)
 import GraphQLErrorList from '../components/graphql-error-list'
@@ -85,6 +86,9 @@ const IndexPage = (props) => {
   /* State for addresses */
   const [addresses] = useState([
     {
+      address: '0x5CB2E273D45b00026E2c69265dd9bb0E54498A28',
+    },
+    {
       address: '0xd091aCB6bee5164Bb8c7C899a39beE28d5b2Cd49',
     },
     {
@@ -92,9 +96,6 @@ const IndexPage = (props) => {
     },
     {
       address: '0xA3013D3fdBc9B510a9480CB841cD38257beE8Da6',
-    },
-    {
-      address: '0x5CB2E273D45b00026E2c69265dd9bb0E54498A28',
     },
     {
       address: '0xcB1019D169a9C37E00a2248bE38C4691a30B727C',
@@ -172,29 +173,37 @@ const IndexPage = (props) => {
         const maturityMonth = maturity.getUTCMonth() + 1
         const maturityDate = maturity.getUTCDate()
         const setDate = `${maturityYear}/${maturityMonth}/${maturityDate}`
-        console.log(
-          `APR: ${getAPR} for ${object.value.address}, sellPreview: ${object.value.sellPreview}, maturing on ${setDate}`
-        )
-        passData.push({ x: setDate, y: getAPR })
+        // console.log(
+        //   `APR: ${getAPR} for ${object.value.address}, sellPreview: ${object.value.sellPreview}, maturing on ${setDate}`
+        // )
+        passData.push({ x: setDate, y: getAPR, date: maturity })
       })
-      updateChartData(passData.sort((a, b) => b.x - a.x))
+
+      const results = eachMonthOfInterval({
+        start: passData[0].date,
+        end: [...passData].pop().date,
+      })
+
+      const monthsRange = results.map((date) => {
+        const maturity = new Date(date)
+        const maturityYear = maturity.getUTCFullYear()
+        const maturityMonth = maturity.getUTCMonth() + 1
+        const maturityDate = maturity.getUTCDate()
+        const setDate = `${maturityYear}/${maturityMonth}/${maturityDate}`
+        return {
+          date: date,
+          x: setDate,
+          y: 0,
+        }
+      })
+
+      const map = new Map()
+      passData.forEach((item) => map.set(item.date, item))
+      monthsRange.forEach((item) => map.set(item.date, { ...map.get(item.date), ...item }))
+      const mergedArr = Array.from(map.values())
+
+      updateChartData(mergedArr.sort((a, b) => a.date - b.date))
       dispatch({ type: 'updateLastMonth', payload: rates.splice(-1)[0] })
-      /* Update last date */
-      // let dateObj = new Date()
-      // const lastMonthDate = new Date(lastMonth)
-      /* Test */
-      // const dateStrings = []
-      // const dateFormatOptions = {
-      //   month: 'long',
-      //   year: 'numeric',
-      // }
-
-      // for (var i = 0; i < 12; ++i) {
-      //   dateStrings.unshift(lastMonthDate.toLocaleString('en-US', dateFormatOptions))
-      //   dateObj.setMonth(lastMonthDate.getMonth() - 1)
-      // }
-
-      // console.log(dateStrings)
     }
   }
 
