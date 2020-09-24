@@ -46,11 +46,6 @@ function reducer(state, action) {
         ...state,
         seriesRates: action.payload,
       }
-    case 'updateLastMonth':
-      return {
-        ...state,
-        lastMonth: action.payload,
-      }
     default:
       return state
   }
@@ -65,7 +60,6 @@ const IndexPage = (props) => {
   /* Set state for yields */
   const initState = {
     seriesRates: new Map(),
-    lastMonth: new Date(),
   }
 
   const [chartData, updateChartData] = React.useState([])
@@ -179,9 +173,11 @@ const IndexPage = (props) => {
         passData.push({ x: setDate, y: getAPR, date: maturity })
       })
 
+      const parseDateRange = passData.sort((a, b) => a.date - b.date)
+
       const results = eachMonthOfInterval({
-        start: passData[0].date,
-        end: [...passData].pop().date,
+        start: parseDateRange[0].date,
+        end: [...parseDateRange].pop().date,
       })
 
       const monthsRange = results.map((date) => {
@@ -193,7 +189,7 @@ const IndexPage = (props) => {
         return {
           date: date,
           x: setDate,
-          y: 0,
+          y: null,
         }
       })
 
@@ -203,7 +199,6 @@ const IndexPage = (props) => {
       const mergedArr = Array.from(map.values())
 
       updateChartData(mergedArr.sort((a, b) => a.date - b.date))
-      dispatch({ type: 'updateLastMonth', payload: rates.splice(-1)[0] })
     }
   }
 
@@ -242,7 +237,10 @@ const IndexPage = (props) => {
     }),
     datasets: [
       {
+        // cubicInterpolationMode: 'linear',
+        lineTension: 0,
         borderColor: '#FFF',
+        spanGaps: true,
         data: chartData.map((o, i) => {
           return o.y
         }),
