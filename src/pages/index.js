@@ -35,8 +35,8 @@ export const query = graphql`
   }
 `
 
-const ParagraphClass = 'text-sm lg:text-baseline text-gray-500 mb-8'
-const HeadingClass = 'text-2xl lg:text-4xl font-bold font-display mb-6'
+const ParagraphClass = 'text-sm lg:text-baseline text-gray-500 mb-2'
+const HeadingClass = 'text-2xl lg:text-4xl font-bold font-display mb-2'
 
 // Reducer
 function reducer(state, action) {
@@ -307,9 +307,22 @@ const IndexPage = (props) => {
       <SEO title={siteTitle} description={siteDescription} keywords={siteKeywords} />
       <ContainerFull>
         <div className="inline-block relative w-full text-center overflow-hidden">
-          <div className="inline-block w-full">
-            <h1 className={HeadingClass}>The Yield Curve</h1>
-            <p className={ParagraphClass}>Uhhh.... the curves yield, yo!</p>
+          <div className="inline-block w-full mb-8">
+            <h1 className={HeadingClass}>The Dai Yield Curve</h1>
+            <p className={ParagraphClass}>
+              Shown are the current offered interest rates for borrowing and lending Dai using the
+              Yield Protocol
+            </p>
+            <div className="inline-block relative w-full">
+              <a
+                className="block mx-auto link text-sm text-gray-600 underline"
+                href="https://yield.is/"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                by Yield Protocol
+              </a>
+            </div>
           </div>
           <div className="inline-block relative w-full max-w-6xl">
             <Line options={options} data={newData} />
