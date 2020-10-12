@@ -4,10 +4,10 @@
   </a>
 </p>
 <h1 align="center">
-  Yield Curve Website
+  Yield Curve
 </h1>
 
-The Yield Curve website using Gatsby and Tailwind CSS.
+The Yield Curve using Gatsby and Tailwind CSS.
 
 _Have another more specific idea? You may want to check out our vibrant collection of [official and community-created starters](https://www.gatsbyjs.org/docs/gatsby-starters/)._
 
