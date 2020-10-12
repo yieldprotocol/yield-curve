@@ -23,7 +23,7 @@ function SEO({ description, keywords, title, image, lang, meta, url }) {
           return
         }
         const metaDescription = description || data.site.siteMetadata.description
-        const socialImage = image || 'https://yield-curve.netlify.app/social.png'
+        const socialImage = image || 'https://yield.is/img/social.png'
         return (
           <Helmet
             htmlAttributes={{
@@ -35,33 +35,33 @@ function SEO({ description, keywords, title, image, lang, meta, url }) {
             }
             link={[
               {
-                href: 'https://yield-curve.netlify.app/favicons/apple-touch-icon.png',
+                href: 'https://curve.yield.is/favicons/apple-touch-icon.png',
                 sizes: '180x180',
                 rel: 'apple-touch-icon',
               },
               {
-                href: 'https://yield-curve.netlify.app/favicons/favicon-32x32.png',
+                href: 'https://curve.yield.is/favicons/favicon-32x32.png',
                 sizes: '32x32',
                 type: 'image/png',
                 rel: 'icon',
               },
               {
-                href: 'https://yield-curve.netlify.app/favicons/favicon-16x16.png',
+                href: 'https://curve.yield.is/favicons/favicon-16x16.png',
                 sizes: '16x16',
                 type: 'image/png',
                 rel: 'icon',
               },
               {
-                href: 'https://yield-curve.netlify.app/favicons/site.webmanifest',
+                href: 'https://curve.yield.is/favicons/site.webmanifest',
                 rel: 'manifest',
               },
               {
-                href: 'https://yield-curve.netlify.app/favicons/safari-pinned-tab.svg',
+                href: 'https://curve.yield.is/favicons/safari-pinned-tab.svg',
                 color: '#5641ff',
                 rel: 'mask-icon',
               },
               {
-                href: 'https://yield-curve.netlify.app/favicons/favicon.ico',
+                href: 'https://curve.yield.is/favicons/favicon.ico',
                 rel: 'shortcut icon',
               },
               {
@@ -128,7 +128,7 @@ function SEO({ description, keywords, title, image, lang, meta, url }) {
                 name: 'msapplication-TileColor',
               },
               {
-                content: 'https://yield-curve.netlify.app/favicons/browserconfig.xml',
+                content: 'https://curve.yield.is/favicons/browserconfig.xml',
                 name: 'msapplication-config',
               },
               {

@@ -21,7 +21,7 @@ module.exports = {
   siteMetadata: {
     title: `Yield Curve`,
     siteUrl: `https://curve.yield.is/`,
-    description: `Some description can go here...`,
+    description: `Coming soon!`,
     siteKeywords: ['yield', 'curve', 'crypto', 'cryptocurrency'],
     author: `yield`,
     email: `hi@yield.is`,
