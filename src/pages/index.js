@@ -13,8 +13,8 @@ import Layout from '../containers/layout'
 // Pool
 import Pool from '../contracts/pool.json'
 
-// EDAI ABI
-const eDai = [
+// fyDai ABI
+const fyDai = [
   'function maturity() view returns (uint256)',
   'function isMature() view returns(bool)',
   'function mature()',
@@ -73,26 +73,42 @@ const IndexPage = (props) => {
       ethers = require('ethers')
 
       // Default provider
-      provider = ethers.getDefaultProvider('kovan')
+      provider = ethers.getDefaultProvider('kovan', {
+        etherscan: process.env.ETHERSCAN_API_KEY,
+        infura: process.env.INFURA_PROJECT_ID,
+        alchemy: process.env.ALCHEMY_API_KEY
+      })
     }
   }
 
   /* State for addresses */
   const [addresses] = useState([
     {
-      address: '0x5CB2E273D45b00026E2c69265dd9bb0E54498A28',
+      address: '0xcaC563C5801eF9EEEC53567B067328D5B814382A',
     },
     {
-      address: '0xd091aCB6bee5164Bb8c7C899a39beE28d5b2Cd49',
+      address: '0x78274aBB5B35c43423534c3C2b2Cf94e38dfc195',
     },
     {
-      address: '0xF037dea1DF9fF3556b5D1F721B3fcA31Fc814Dfa',
+      address: '0xC57014bA827cACfef189745c84586437bEEd38b5',
     },
     {
-      address: '0xA3013D3fdBc9B510a9480CB841cD38257beE8Da6',
+      address: '0xA0189d8C7Ec9568f68BD09ABba2bAA495Aa47173',
     },
     {
-      address: '0xcB1019D169a9C37E00a2248bE38C4691a30B727C',
+      address: '0xd4c9ef996318eD5F6254A7B5E6CAA05D9A1675b2',
+    },
+    {
+      address: '0x3a7DCd97db920e6b016eBf9638f2A063D75b8b9C',
+    },
+    {
+      address: '0x9366CeC6dB80Ae6F2385D055010b52C098c123F6',
+    },
+    {
+      address: '0xCbF2E55d337DaF7c6Ad14550db8eAD672526b769',
+    },
+    {
+      address: '0x55416B5b1F53ccDf62B936f7D5C31d4325164DC0',
     },
   ])
 
@@ -107,23 +123,23 @@ const IndexPage = (props) => {
       seriesArr.map(async (x) => {
         const contract = new ethers.Contract(x.address, Pool.abi, provider)
 
-        const eDaiAddress = await contract.eDai()
-        const eDaiContract = new ethers.Contract(eDaiAddress, eDai, provider)
-        const eDaiMaturity = await eDaiContract.maturity()
-        const parsedEDaiMaturity = new Date(parseInt(eDaiMaturity.toString()) * 1000)
+        const fyDaiAddress = await contract.fyDai()
+        const fyDaiContract = new ethers.Contract(fyDaiAddress, fyDai, provider)
+        const fyDaiMaturity = await fyDaiContract.maturity()
+        const parsedfyDaiMaturity = new Date(parseInt(fyDaiMaturity.toString()) * 1000)
 
         const amount = 1
         const parsedAmount = ethers.BigNumber.isBigNumber(amount)
           ? amount
           : ethers.utils.parseEther(amount.toString())
 
-        const preview = await contract.sellEDaiPreview(parsedAmount)
+        const preview = await contract.sellFYDaiPreview(parsedAmount)
 
         const inEther = ethers.utils.formatEther(preview.toString())
         const object = {
           address: x.address,
-          maturity: parsedEDaiMaturity,
-          isMature: parsedEDaiMaturity < Math.round(new Date().getTime() / 1000),
+          maturity: parsedfyDaiMaturity,
+          isMature: parsedfyDaiMaturity < Math.round(new Date().getTime() / 1000),
           sellPreview: inEther,
         }
         return object
@@ -172,9 +188,9 @@ const IndexPage = (props) => {
         const maturityMonth = maturity.getUTCMonth() + 1
         const maturityDate = maturity.getUTCDate()
         const setDate = `${maturityYear}/${maturityMonth}/${maturityDate}`
-        // console.log(
-        //   `APR: ${getAPR} for ${object.value.address}, sellPreview: ${object.value.sellPreview}, maturing on ${setDate}`
-        // )
+        console.log(
+          `APR: ${getAPR} for ${object.value.address}, sellPreview: ${object.value.sellPreview}, maturing on ${setDate}`
+        )
         passData.push({ x: setDate, y: roundToTwo(getAPR), date: maturity })
       })
 
