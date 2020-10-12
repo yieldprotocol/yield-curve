@@ -73,7 +73,7 @@ const IndexPage = (props) => {
       ethers = require('ethers')
 
       // Default provider
-      provider = ethers.getDefaultProvider('kovan', {
+      provider = ethers.getDefaultProvider('homestead', {
         etherscan: process.env.ETHERSCAN_API_KEY,
         infura: process.env.INFURA_PROJECT_ID,
         alchemy: process.env.ALCHEMY_API_KEY
@@ -84,31 +84,22 @@ const IndexPage = (props) => {
   /* State for addresses */
   const [addresses] = useState([
     {
-      address: '0xcaC563C5801eF9EEEC53567B067328D5B814382A',
+      address: '0xe141E9728556a0aC1F28A94a8f46B29568d5d568',
     },
     {
-      address: '0x78274aBB5B35c43423534c3C2b2Cf94e38dfc195',
+      address: '0xC854b977875AEc06F202C7b6D4e366B1d315a687',
     },
     {
-      address: '0xC57014bA827cACfef189745c84586437bEEd38b5',
+      address: '0x9939472fF44a997128AB43f13575644Ac14BB044',
     },
     {
-      address: '0xA0189d8C7Ec9568f68BD09ABba2bAA495Aa47173',
+      address: '0xB11C19A12AAB464c521a7005618216aBc72475BF',
     },
     {
-      address: '0xd4c9ef996318eD5F6254A7B5E6CAA05D9A1675b2',
+      address: '0x88b4ca4e1DE952CCc27f0f07dE5C49f2c107d417',
     },
     {
-      address: '0x3a7DCd97db920e6b016eBf9638f2A063D75b8b9C',
-    },
-    {
-      address: '0x9366CeC6dB80Ae6F2385D055010b52C098c123F6',
-    },
-    {
-      address: '0xCbF2E55d337DaF7c6Ad14550db8eAD672526b769',
-    },
-    {
-      address: '0x55416B5b1F53ccDf62B936f7D5C31d4325164DC0',
+      address: '0x4fD6f57dBF57cF0b3cCcfE0fa3e47CF6F69e9f9F',
     },
   ])
 
