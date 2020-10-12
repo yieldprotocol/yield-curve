@@ -34,8 +34,8 @@ const Header = class extends React.Component {
 
     const RightNav = () => (
       <div className="relative w-auto tl tr-l">
-        <a href="https://app.yield.is/" className="underline inherit link" target="_blank" rel="noreferrer">
-          Try the app
+        <a href="https://twitter.com/yield" className="underline inherit link" target="_blank" rel="noreferrer">
+          Follow on Twitter
         </a>
       </div>
     )

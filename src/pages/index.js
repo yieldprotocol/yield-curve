@@ -35,7 +35,7 @@ export const query = graphql`
 `
 
 const ParagraphClass = 'text-sm lg:text-baseline text-gray-500 mb-8'
-const HeadingClass = 'text-2xl lg:text-4xl font-bold font-display mb-6'
+const HeadingClass = 'text-2xl lg:text-4xl font-bold font-display mb-6 mx-auto'
 
 // Reducer
 function reducer(state, action) {
@@ -293,17 +293,9 @@ const IndexPage = (props) => {
   return (
     <Layout>
       <SEO title={siteTitle} description={siteDescription} keywords={siteKeywords} />
-      <ContainerFull>
-        <div className="inline-block relative w-full text-center overflow-hidden">
-          <div className="inline-block w-full">
-            <h1 className={HeadingClass}>The Yield Curve</h1>
-            <p className={ParagraphClass}>Uhhh.... the curves yield, yo!</p>
-          </div>
-          <div className="inline-block relative w-full max-w-6xl">
-            <Line options={options} data={newData} />
-          </div>
-        </div>
-      </ContainerFull>
+      <div className="h-screen flex align-center text-center justify-between items-center text-white text-center">
+        <h1 className={HeadingClass}>Coming soon!</h1>
+      </div>
     </Layout>
   )
 }
