@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Line } from 'react-chartjs-2'
-import { eachMonthOfInterval } from 'date-fns'
+import { eachMonthOfInterval, format } from 'date-fns'
 
 // Component(s)
 import GraphQLErrorList from '../components/graphql-error-list'
@@ -74,9 +74,7 @@ const IndexPage = (props) => {
 
       // Default provider
       provider = ethers.getDefaultProvider('homestead', {
-        etherscan: process.env.ETHERSCAN_API_KEY,
         infura: process.env.INFURA_PROJECT_ID,
-        alchemy: process.env.ALCHEMY_API_KEY
       })
     }
   }
@@ -281,6 +279,25 @@ const IndexPage = (props) => {
       display: false,
       text: 'Chart Title',
     },
+    tooltips: {
+      titleFontFamily: defaultFont,
+      bodyFontFamily: defaultFont,
+      callbacks: {
+        label: (tooltipItem, data) => {
+          // const readableDate = `${format(tooltipItem.xLabel, 'MMMM dd yyyy')}`
+          let label = data.datasets[tooltipItem.datasetIndex].label || ''
+          
+          console.log(label)
+
+          if (label) {
+            label += ': '
+          }
+          label += `${tooltipItem.yLabel}%`
+
+          return label
+        },
+      },
+    },
     scales: {
       xAxes: [
         {
@@ -302,6 +319,9 @@ const IndexPage = (props) => {
           ticks: {
             fontFamily: tickFont,
             beginAtZero: 0,
+            callback: function (value) {
+              return ((value / this.max) * 100).toFixed(0) + '%' // convert it to percentage
+            },
             min: 0,
           },
         },
