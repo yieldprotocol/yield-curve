@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Line } from 'react-chartjs-2'
-import { eachMonthOfInterval, format } from 'date-fns'
+import { eachMonthOfInterval } from 'date-fns'
 
 // Component(s)
 import GraphQLErrorList from '../components/graphql-error-list'
@@ -74,7 +74,9 @@ const IndexPage = (props) => {
 
       // Default provider
       provider = ethers.getDefaultProvider('homestead', {
+        etherscan: process.env.ETHERSCAN_API_KEY,
         infura: process.env.INFURA_PROJECT_ID,
+        alchemy: process.env.ALCHEMY_API_KEY,
       })
     }
   }
@@ -82,22 +84,22 @@ const IndexPage = (props) => {
   /* State for addresses */
   const [addresses] = useState([
     {
-      address: '0xe141E9728556a0aC1F28A94a8f46B29568d5d568',
+      address: '0xF7dB19E0373937A13e4b12287B1C121Dfb2d9BF8',
     },
     {
-      address: '0xC854b977875AEc06F202C7b6D4e366B1d315a687',
+      address: '0x6feb7B2a023C9Bc3ccCdF7c5B5a7b929B9a65E04',
     },
     {
-      address: '0x9939472fF44a997128AB43f13575644Ac14BB044',
+      address: '0x5591f644B377eD784e558D4BE1bbA78f5a26bdCd',
     },
     {
-      address: '0xB11C19A12AAB464c521a7005618216aBc72475BF',
+      address: '0x250f8d88173E0D9b692A9742f54e87E01A9FA54E',
     },
     {
-      address: '0x88b4ca4e1DE952CCc27f0f07dE5C49f2c107d417',
+      address: '0xb39221E6790Ae8360B7E8C1c7221900fad9397f9',
     },
     {
-      address: '0x4fD6f57dBF57cF0b3cCcfE0fa3e47CF6F69e9f9F',
+      address: '0x8EcC94a91b5CF03927f5eb8c60ABbDf48F82b0b3',
     },
   ])
 
@@ -286,7 +288,7 @@ const IndexPage = (props) => {
         label: (tooltipItem, data) => {
           // const readableDate = `${format(tooltipItem.xLabel, 'MMMM dd yyyy')}`
           let label = data.datasets[tooltipItem.datasetIndex].label || ''
-          
+
           console.log(label)
 
           if (label) {
