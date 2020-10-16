@@ -322,7 +322,8 @@ const IndexPage = (props) => {
             fontFamily: tickFont,
             beginAtZero: 0,
             callback: function (value) {
-              return ((value / this.max) * 100).toFixed(0) + '%' // convert it to percentage
+              // return ((value / this.max) * 100).toFixed(0) + '%' // convert it to percentage
+              return `${value}%`
             },
             min: 0,
           },

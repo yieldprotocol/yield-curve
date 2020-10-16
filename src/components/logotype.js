@@ -12,3 +12,4 @@ const Logotype = ({ company }) => (
 )
 
 export default Logotype
+
