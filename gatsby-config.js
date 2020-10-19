@@ -21,7 +21,7 @@ module.exports = {
   siteMetadata: {
     title: `Yield Curve`,
     siteUrl: `https://curve.yield.is/`,
-    description: `Coming soon!`,
+    description: `Shown are the current offered interest rates for borrowing and lending Dai using the Yield Protocol`,
     siteKeywords: ['yield', 'curve', 'crypto', 'cryptocurrency'],
     author: `yield`,
     email: `hi@yield.is`,

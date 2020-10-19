@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Line } from 'react-chartjs-2'
+import { eachMonthOfInterval } from 'date-fns'
 
 // Component(s)
 import GraphQLErrorList from '../components/graphql-error-list'
@@ -12,8 +13,8 @@ import Layout from '../containers/layout'
 // Pool
 import Pool from '../contracts/pool.json'
 
-// EDAI ABI
-const eDai = [
+// fyDai ABI
+const fyDai = [
   'function maturity() view returns (uint256)',
   'function isMature() view returns(bool)',
   'function mature()',
@@ -34,8 +35,8 @@ export const query = graphql`
   }
 `
 
-const ParagraphClass = 'text-sm lg:text-baseline text-gray-500 mb-8'
-const HeadingClass = 'text-2xl lg:text-4xl font-bold font-display mb-6 mx-auto'
+const ParagraphClass = 'text-sm lg:text-baseline text-gray-500 mb-2'
+const HeadingClass = 'text-2xl lg:text-4xl font-bold font-display mb-2'
 
 // Reducer
 function reducer(state, action) {
@@ -44,11 +45,6 @@ function reducer(state, action) {
       return {
         ...state,
         seriesRates: action.payload,
-      }
-    case 'updateLastMonth':
-      return {
-        ...state,
-        lastMonth: action.payload,
       }
     default:
       return state
@@ -64,7 +60,6 @@ const IndexPage = (props) => {
   /* Set state for yields */
   const initState = {
     seriesRates: new Map(),
-    lastMonth: new Date(),
   }
 
   const [chartData, updateChartData] = React.useState([])
@@ -78,28 +73,40 @@ const IndexPage = (props) => {
       ethers = require('ethers')
 
       // Default provider
-      provider = ethers.getDefaultProvider('kovan')
+      provider = ethers.getDefaultProvider('homestead', {
+        etherscan: process.env.ETHERSCAN_API_KEY,
+        infura: process.env.INFURA_PROJECT_ID,
+        alchemy: process.env.ALCHEMY_API_KEY,
+      })
     }
   }
 
   /* State for addresses */
   const [addresses] = useState([
     {
-      address: '0xa4d02E3281E7CE2f1a398BA6DC79fdb5B537F731',
+      address: '0x6feb7B2a023C9Bc3ccCdF7c5B5a7b929B9a65E04',
     },
     {
-      address: '0x2CEFcB458Ad3da4E880F11611CE7AFA81afe059e',
+      address: '0xF7dB19E0373937A13e4b12287B1C121Dfb2d9BF8',
     },
     {
-      address: '0xb2A07439559fb29E800655a4e3f9901aeB8A11a1',
+      address: '0xb39221E6790Ae8360B7E8C1c7221900fad9397f9',
     },
     {
-      address: '0x5284BF5D90852467dB2DBad700e0e98f2689C93b',
+      address: '0x8EcC94a91b5CF03927f5eb8c60ABbDf48F82b0b3',
     },
     {
-      address: '0x1EC085F7ae44Ab95577F4F63fe4Eb1A5e8f16cf4',
+      address: '0x6feb7B2a023C9Bc3ccCdF7c5B5a7b929B9a65E04',
+    },
+    {
+      address: '0xF2C9c61487D796032cdb9d57f770121218AC5F91',
     },
   ])
+
+  /* Round function */
+  function roundToTwo(num) {
+    return +(Math.round(num + 'e+2') + 'e-2')
+  }
 
   /* Get the yield market rates for a particular set of series */
   const _getRates = async (seriesArr) => {
@@ -107,23 +114,23 @@ const IndexPage = (props) => {
       seriesArr.map(async (x) => {
         const contract = new ethers.Contract(x.address, Pool.abi, provider)
 
-        const eDaiAddress = await contract.eDai()
-        const eDaiContract = new ethers.Contract(eDaiAddress, eDai, provider)
-        const eDaiMaturity = await eDaiContract.maturity()
-        const parsedEDaiMaturity = new Date(parseInt(eDaiMaturity.toString()) * 1000)
+        const fyDaiAddress = await contract.fyDai()
+        const fyDaiContract = new ethers.Contract(fyDaiAddress, fyDai, provider)
+        const fyDaiMaturity = await fyDaiContract.maturity()
+        const parsedfyDaiMaturity = new Date(parseInt(fyDaiMaturity.toString()) * 1000)
 
         const amount = 1
         const parsedAmount = ethers.BigNumber.isBigNumber(amount)
           ? amount
           : ethers.utils.parseEther(amount.toString())
 
-        const preview = await contract.sellEDaiPreview(parsedAmount)
+        const preview = await contract.sellFYDaiPreview(parsedAmount)
 
         const inEther = ethers.utils.formatEther(preview.toString())
         const object = {
           address: x.address,
-          maturity: parsedEDaiMaturity,
-          isMature: parsedEDaiMaturity < Math.round(new Date().getTime() / 1000),
+          maturity: parsedfyDaiMaturity,
+          isMature: parsedfyDaiMaturity < Math.round(new Date().getTime() / 1000),
           sellPreview: inEther,
         }
         return object
@@ -175,26 +182,35 @@ const IndexPage = (props) => {
         console.log(
           `APR: ${getAPR} for ${object.value.address}, sellPreview: ${object.value.sellPreview}, maturing on ${setDate}`
         )
-        passData.push({ x: setDate, y: getAPR })
+        passData.push({ x: setDate, y: roundToTwo(getAPR), date: maturity })
       })
-      updateChartData(passData.sort((a, b) => b.x - a.x))
-      dispatch({ type: 'updateLastMonth', payload: rates.splice(-1)[0] })
-      /* Update last date */
-      // let dateObj = new Date()
-      // const lastMonthDate = new Date(lastMonth)
-      /* Test */
-      // const dateStrings = []
-      // const dateFormatOptions = {
-      //   month: 'long',
-      //   year: 'numeric',
-      // }
 
-      // for (var i = 0; i < 12; ++i) {
-      //   dateStrings.unshift(lastMonthDate.toLocaleString('en-US', dateFormatOptions))
-      //   dateObj.setMonth(lastMonthDate.getMonth() - 1)
-      // }
+      const parseDateRange = passData.sort((a, b) => a.date - b.date)
 
-      // console.log(dateStrings)
+      const results = eachMonthOfInterval({
+        start: parseDateRange[0].date,
+        end: [...parseDateRange].pop().date,
+      })
+
+      const monthsRange = results.map((date) => {
+        const maturity = new Date(date)
+        const maturityYear = maturity.getUTCFullYear()
+        const maturityMonth = maturity.getUTCMonth() + 1
+        const maturityDate = maturity.getUTCDate()
+        const setDate = `${maturityYear}/${maturityMonth}/${maturityDate}`
+        return {
+          date: date,
+          x: setDate,
+          y: null,
+        }
+      })
+
+      const map = new Map()
+      passData.forEach((item) => map.set(item.date, item))
+      monthsRange.forEach((item) => map.set(item.date, { ...map.get(item.date), ...item }))
+      const mergedArr = Array.from(map.values())
+
+      updateChartData(mergedArr.sort((a, b) => a.date - b.date))
     }
   }
 
@@ -233,7 +249,10 @@ const IndexPage = (props) => {
     }),
     datasets: [
       {
+        // cubicInterpolationMode: 'linear',
+        lineTension: 0,
         borderColor: '#FFF',
+        spanGaps: true,
         data: chartData.map((o, i) => {
           return o.y
         }),
@@ -262,12 +281,31 @@ const IndexPage = (props) => {
       display: false,
       text: 'Chart Title',
     },
+    tooltips: {
+      titleFontFamily: defaultFont,
+      bodyFontFamily: defaultFont,
+      callbacks: {
+        label: (tooltipItem, data) => {
+          // const readableDate = `${format(tooltipItem.xLabel, 'MMMM dd yyyy')}`
+          let label = data.datasets[tooltipItem.datasetIndex].label || ''
+
+          console.log(label)
+
+          if (label) {
+            label += ': '
+          }
+          label += `${tooltipItem.yLabel}%`
+
+          return label
+        },
+      },
+    },
     scales: {
       xAxes: [
         {
           scaleLabel: {
             ...labelOptions,
-            labelString: 'Maturity (UTC/GMT+0)',
+            labelString: 'Maturity',
           },
           ticks: {
             fontFamily: tickFont,
@@ -283,6 +321,10 @@ const IndexPage = (props) => {
           ticks: {
             fontFamily: tickFont,
             beginAtZero: 0,
+            callback: function (value) {
+              // return ((value / this.max) * 100).toFixed(0) + '%' // convert it to percentage
+              return `${value}%`
+            },
             min: 0,
           },
         },
@@ -293,9 +335,30 @@ const IndexPage = (props) => {
   return (
     <Layout>
       <SEO title={siteTitle} description={siteDescription} keywords={siteKeywords} />
-      <div className="h-screen flex align-center text-center justify-between items-center text-white text-center">
-        <h1 className={HeadingClass}>Coming soon!</h1>
-      </div>
+      <ContainerFull>
+        <div className="inline-block relative w-full text-center overflow-hidden">
+          <div className="inline-block w-full mb-8">
+            <h1 className={HeadingClass}>The Dai Yield Curve</h1>
+            <p className={ParagraphClass}>
+              Shown are the current offered interest rates for borrowing and lending Dai using the
+              Yield Protocol
+            </p>
+            <div className="inline-block relative w-full">
+              <a
+                className="block mx-auto link text-sm text-gray-600 underline"
+                href="https://yield.is/"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                by Yield Protocol
+              </a>
+            </div>
+          </div>
+          <div className="inline-block relative w-full max-w-6xl">
+            <Line options={options} data={newData} />
+          </div>
+        </div>
+      </ContainerFull>
     </Layout>
   )
 }
