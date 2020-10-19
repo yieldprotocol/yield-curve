@@ -93,8 +93,8 @@ const IndexPage = (props) => {
       address: '0xb39221E6790Ae8360B7E8C1c7221900fad9397f9',
     },
     {
-      address: `0x250f8d88173E0D9b692A9742f54e87E01A9FA54E`
-    }
+      address: `0x250f8d88173E0D9b692A9742f54e87E01A9FA54E`,
+    },
     {
       address: '0x8EcC94a91b5CF03927f5eb8c60ABbDf48F82b0b3',
     },
