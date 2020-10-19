@@ -1,6 +1,6 @@
 {
-    "name": "Yield Curve",
-    "short_name": "Yield Curve",
+    "name": "Yield",
+    "short_name": "Yield",
     "icons": [
         {
             "src": "/favicons/android-chrome-192x192.png",
@@ -13,7 +13,7 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#5f47dc",
-    "background_color": "#5f47dc",
+    "theme_color": "#5641ff",
+    "background_color": "#5641ff",
     "display": "standalone"
 }
