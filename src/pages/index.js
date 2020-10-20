@@ -84,22 +84,22 @@ const IndexPage = (props) => {
   /* State for addresses */
   const [addresses] = useState([
     {
-      address: '0x6feb7B2a023C9Bc3ccCdF7c5B5a7b929B9a65E04',
+      address: '0x6feb7B2a023C9Bc3ccCdF7c5B5a7b929B9a65E04', // fyDaiLP20Oct
     },
     {
-      address: '0xF7dB19E0373937A13e4b12287B1C121Dfb2d9BF8',
+      address: '0xF7dB19E0373937A13e4b12287B1C121Dfb2d9BF8', // fyDaiLP20Dec
     },
     {
-      address: '0xb39221E6790Ae8360B7E8C1c7221900fad9397f9',
+      address: '0xb39221E6790Ae8360B7E8C1c7221900fad9397f9', // fyDaiLP21Mar
     },
     {
-      address: `0x250f8d88173E0D9b692A9742f54e87E01A9FA54E`,
+      address: `0x250f8d88173E0D9b692A9742f54e87E01A9FA54E`, // fyDaiLP21Jun
     },
     {
-      address: '0x8EcC94a91b5CF03927f5eb8c60ABbDf48F82b0b3',
+      address: '0x8EcC94a91b5CF03927f5eb8c60ABbDf48F82b0b3', // fyDaiLP21Sep
     },
     {
-      address: '0xF2C9c61487D796032cdb9d57f770121218AC5F91',
+      address: '0x5591f644B377eD784e558D4BE1bbA78f5a26bdCd', // fyDaiLP21Dec
     },
   ])
 
